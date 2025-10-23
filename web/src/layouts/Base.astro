@@ -1,0 +1,41 @@
+---
+const { title = "Bluewave Visuals", description = "Cinematic storytelling through sea, light, and motion." } = Astro.props;
+import "../styles/globals.css";
+---
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+  </head>
+
+  <body class="min-h-screen flex flex-col">
+    <header class="fixed top-0 left-0 w-full bg-white/70 backdrop-blur-sm border-b border-neutral-200 z-50">
+      <nav class="max-w-6xl mx-auto flex items-center justify-between h-16 px-4">
+        <a href="/" class="font-semibold text-lg">Bluewave Visuals</a>
+        <ul class="hidden md:flex items-center space-x-6 text-sm">
+          <li><a href="/services" class="hover:underline">Services</a></li>
+          <li><a href="/portfolio" class="hover:underline">Portfolio</a></li>
+          <li><a href="/about" class="hover:underline">About</a></li>
+          <li><a href="/shop" class="hover:underline">Shop</a></li>
+          <li><a href="/contact" class="rounded-md bg-neutral-900 text-white px-3 py-1.5 hover:bg-neutral-700">Book Us</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main class="flex-1 pt-16">
+      <slot />
+    </main>
+
+    <footer class="bg-neutral-900 text-neutral-300 py-10 mt-24">
+      <div class="max-w-6xl mx-auto px-4 flex items-center justify-between text-sm">
+        <p>© {new Date().getFullYear()} Bluewave Visuals</p>
+        <div class="space-x-4">
+          <a href="https://www.instagram.com/bluewave.visuals/" target="_blank" class="hover:text-white">Instagram</a>
+          <a href="mailto:info@bluewavevisuals.com" class="hover:text-white">Email</a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

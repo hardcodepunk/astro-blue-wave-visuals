@@ -1,16 +1,17 @@
 ---
-
+import Base from "../layouts/Base.astro";
 ---
-
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Base title="Bluewave Visuals" description="Cinematic storytelling through sea, light, and motion.">
+  <section class="h-[90vh] flex items-center justify-center text-center bg-neutral-900 text-white">
+    <div>
+      <h1 class="text-5xl font-bold mb-4">Bluewave Visuals</h1>
+      <p class="max-w-xl mx-auto text-neutral-300">
+        Cinematic storytelling through sea, light, and motion.
+      </p>
+      <div class="mt-8 flex justify-center gap-4">
+        <a href="/portfolio" class="bg-white text-black px-5 py-2 rounded hover:bg-neutral-200 transition">View Portfolio</a>
+        <a href="/contact" class="border border-white px-5 py-2 rounded hover:bg-white hover:text-black transition">Book Us</a>
+      </div>
+    </div>
+  </section>
+</Base>
