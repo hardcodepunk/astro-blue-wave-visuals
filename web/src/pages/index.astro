@@ -1,16 +1,33 @@
 ---
-import Base from "../layouts/Base.astro";
-import VideoHero from "../components/VideoHero.tsx";
+import Base from "../layouts/Base.astro"
+import VideoHero from "../components/VideoHero.tsx"
+import ServicesSection from "../components/ServicesSection.astro"
+import FeaturedGrid from "../components/FeaturedGrid.astro"
+import AboutTeaser from "../components/AboutTeaser.astro"
+import ShopPreview from "../components/ShopPreview.astro"
+import ContactCTA from "../components/ContactCTA.astro"
 
-const cloudinaryMp4URL = "https://res.cloudinary.com/hardcodepunk/video/upload/v1737957147/wsuszohtmu2pks673muc.mp4";
-const cloudinaryWebmURL = "https://res.cloudinary.com/hardcodepunk/video/upload/v1701949596/zfrqvj08czjna2zaupf8.webm";
+const cloudinaryMp4URL =
+  "https://res.cloudinary.com/hardcodepunk/video/upload/q_auto:eco,vc_auto,f_mp4/v1737957147/wsuszohtmu2pks673muc.mp4"
+const cloudinaryWebmURL =
+  "https://res.cloudinary.com/hardcodepunk/video/upload/q_auto:eco,vc_auto,f_webm/v1761381373/b8f7chk3u9s6jaqh4bae.webm"
+const poster =
+  "https://res.cloudinary.com/hardcodepunk/video/upload/q_auto:eco,so_0,f_jpg,w_1600/v1737957147/wsuszohtmu2pks673muc.jpg"
 ---
 
 <Base title="Bluewave Visuals" description="Cinematic storytelling through sea, light, and motion.">
   <VideoHero
     webm={cloudinaryWebmURL}
     mp4={cloudinaryMp4URL}
+    poster={poster}
     title="Bluewave Visuals"
     subtitle="Cinematic storytelling through sea, light, and motion."
+    client:load
   />
+
+  <ServicesSection />
+  <FeaturedGrid />
+  <AboutTeaser />
+  <ShopPreview />
+  <ContactCTA />
 </Base>

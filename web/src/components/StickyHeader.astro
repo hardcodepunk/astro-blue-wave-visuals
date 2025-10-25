@@ -1,0 +1,26 @@
+<header class="fixed inset-x-0 top-0 z-50 transition">
+  <nav id="nav" class="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 bg-white/10 backdrop-blur-sm">
+    <a href="/" class="font-display text-lg">Bluewave Visuals</a>
+    <div class="hidden gap-6 md:flex">
+      <a href="/services">Services</a>
+      <a href="/portfolio">Portfolio</a>
+      <a href="/about">About</a>
+      <a href="/shop">Shop</a>
+      <a href="/contact" class="rounded-md bg-neutral-900 px-3 py-1.5 text-white">Book Us</a>
+    </div>
+  </nav>
+  <script is:inline>
+    const nav = document.getElementById("nav")
+    const onScroll = () => {
+      if (window.scrollY > 120) {
+        nav?.classList.add("bg-white", "border-b", "border-neutral-200")
+        nav?.classList.remove("bg-white/10")
+      } else {
+        nav?.classList.add("bg-white/10")
+        nav?.classList.remove("bg-white", "border-b", "border-neutral-200")
+      }
+    }
+    onScroll()
+    window.addEventListener("scroll", onScroll, { passive: true })
+  </script>
+</header>

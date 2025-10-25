@@ -1,0 +1,30 @@
+---
+const products = [
+  { title: "The Horizon — Print", price: "€120", img: "/img/horizontal-2.jpg" },
+  { title: "Ocean Glow — Preset Pack", price: "€25", img: "/img/horizontal-2.jpg" },
+];
+const shopUrl = "https://shop.bluewavevisuals.com"; // update when ready
+---
+<section class="mx-auto max-w-6xl px-4 py-16 bg-neutral-50 rounded-2xl">
+  <div class="flex items-end justify-between">
+    <h2 class="font-display text-3xl">Prints & Presets</h2>
+    <a href={shopUrl} class="text-sm underline underline-offset-4">Visit full shop</a>
+  </div>
+  <div class="mt-6 grid gap-6 md:grid-cols-2">
+    {products.map((p) => (
+      <div class="overflow-hidden rounded-xl border border-neutral-200 bg-white">
+        <img src={p.img} alt={p.title} class="h-64 w-full object-cover" />
+        <div class="p-4">
+          <div class="flex items-center justify-between">
+            <h3 class="font-semibold">{p.title}</h3>
+            <span class="text-neutral-600">{p.price}</span>
+          </div>
+          <div class="mt-3">
+            <!-- Replace with Shopify Buy Button embed when you have product IDs -->
+            <a href={shopUrl} class="inline-block rounded-md bg-neutral-900 px-4 py-2 text-white">Buy</a>
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
