@@ -1,17 +1,37 @@
 ---
-const img = "/img/danae-ewoud.jpg"
+import { sanity, urlFor } from "../lib/sanity"
+
+const about = await sanity.fetch(`*[_type == "aboutTeaser"][0]{
+  headline,
+  body,
+  image,
+  ctaLabel,
+  ctaHref
+}`)
 ---
 
 <section class="mx-auto max-w-6xl px-4 py-16">
   <div class="grid gap-8 md:grid-cols-2 items-center">
-    <img src={img} alt="Danae & Ewoud" class="w-full rounded-xl object-cover" />
+    <img
+      src={urlFor(about.image).width(1200).height(1200).fit("crop").url()}
+      alt={about.headline}
+      class="w-full rounded-xl object-cover"
+      loading="lazy"
+      decoding="async"
+    />
+
     <div>
-      <h2 class="font-display text-3xl mb-4">We’re Danae & Ewoud</h2>
+      <h2 class="font-display text-3xl mb-4">
+        {about.headline}
+      </h2>
+
       <p class="text-neutral-700 leading-relaxed">
-        We create lifestyle, outdoor, and brand films with a raw, cinematic touch. From surf and trail to authentic
-        brand stories, we capture motion, emotion, and the sense of being alive outside.
+        {about.body}
       </p>
-      <a href="/about" class="mt-6 inline-block rounded-md bg-neutral-900 px-4 py-2 text-white">Read our story</a>
+
+      <a href={about.ctaHref} class="mt-6 inline-block rounded-md bg-neutral-900 px-4 py-2 text-white">
+        {about.ctaLabel}
+      </a>
     </div>
   </div>
 </section>

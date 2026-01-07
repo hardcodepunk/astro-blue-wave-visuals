@@ -6,22 +6,26 @@ import FeaturedGrid from "../components/FeaturedGrid.astro"
 import AboutTeaser from "../components/AboutTeaser.astro"
 import ShopPreview from "../components/ShopPreview.astro"
 import ContactCTA from "../components/ContactCTA.astro"
+import { sanity } from "../lib/sanity"
 
-const cloudinaryMp4URL =
-  "https://res.cloudinary.com/hardcodepunk/video/upload/q_auto:eco,vc_auto,f_mp4/v1737957147/wsuszohtmu2pks673muc.mp4"
-const cloudinaryWebmURL =
-  "https://res.cloudinary.com/hardcodepunk/video/upload/q_auto:eco,vc_auto,f_webm/v1761381373/b8f7chk3u9s6jaqh4bae.webm"
-const poster =
-  "https://res.cloudinary.com/hardcodepunk/video/upload/q_auto:eco,so_0,f_jpg,w_1600/v1737957147/wsuszohtmu2pks673muc.jpg"
+const settings = await sanity.fetch(`*[_type == "siteSettings" && _id == "siteSettings"][0]{
+  title,
+  description,
+  heroTitle,
+  heroSubtitle,
+  heroMp4,
+  heroWebm,
+  heroPoster
+}`)
 ---
 
-<Base title="Bluewave Visuals" description="Cinematic storytelling through sea, light, and motion.">
+<Base title={settings.title} description={settings.description}>
   <VideoHero
-    webm={cloudinaryWebmURL}
-    mp4={cloudinaryMp4URL}
-    poster={poster}
-    title="Bluewave Visuals"
-    subtitle="Cinematic storytelling through sea, light, and motion."
+    webm={settings.heroWebm}
+    mp4={settings.heroMp4}
+    poster={settings.heroPoster}
+    title={settings.heroTitle}
+    subtitle={settings.heroSubtitle}
     client:load
   />
 
