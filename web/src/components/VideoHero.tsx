@@ -132,18 +132,18 @@ export default function VideoHero({
           animate={{ opacity: isPlaying ? 1 : 0, y: isPlaying ? 0 : 18 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
-          <h1 className="font-display text-4xl sm:text-6xl text-white">{title}</h1>
-          {subtitle && <p className="mt-4 max-w-xl text-white/90">{subtitle}</p>}
+          <h1 className="font-display text-4xl sm:text-6xl text-paper">{title}</h1>
+          {subtitle && <p className="mt-4 max-w-xl text-paper/90">{subtitle}</p>}
           <div className="mt-8 flex gap-3">
             <a
               href={primaryHref}
-              className="rounded-md bg-white px-5 py-2 font-medium text-black hover:bg-neutral-200 transition"
+              className="rounded-md bg-paper px-5 py-2 font-medium text-black hover:bg-neutral-200 transition"
             >
               {primaryLabel}
             </a>
             <a
               href={secondaryHref}
-              className="rounded-md border border-white px-5 py-2 font-medium text-white hover:bg-white hover:text-black transition"
+              className="rounded-md border border-paper px-5 py-2 font-medium text-paper hover:bg-paper hover:text-black transition"
             >
               {secondaryLabel}
             </a>

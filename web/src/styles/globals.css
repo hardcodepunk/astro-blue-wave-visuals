@@ -2,4 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-html, body { @apply bg-paper text-ocean antialiased; }
+:root {
+  --paper: 255 234 207; /* #FFEACF */
+  --ocean: 26 110 178;  /* #1A6EB2 */
+}
+
+html, body {
+  @apply antialiased bg-paper text-ocean;
+}
