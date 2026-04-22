@@ -1,15 +1,152 @@
-<header class="fixed inset-x-0 top-0 z-50 transition bg-paper">
-  <nav id="nav" class="mx-auto flex h-32 max-w-6xl items-center justify-between px-4">
-    <a href="/" class="flex items-center">
-      <img src="/img/logo.svg" alt="Bluewave Visuals" class="h-20 w-auto" />
+---
+const nav = [
+  { href: "/services", label: "Services" },
+  { href: "/about", label: "About" },
+]
+
+const isHome = Astro.url.pathname === "/"
+---
+
+<header
+  id="site-header"
+  data-home={isHome ? "true" : "false"}
+  class={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+    isHome ? "text-white" : "bg-paper text-ocean header-solid"
+  }`}
+>
+  <nav class="mx-auto flex h-[65px] md:h-[100px] max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8 relative">
+    <a href="/" class="flex h-full items-center">
+      <span class="header-title block text-ocean font-display uppercase text-xl md:text-4xl tracking-wide leading-none">
+        Bluewave Visuals
+      </span>
     </a>
 
-    <div class="hidden gap-6 md:flex items-center text-ocean">
-      <a href="/services">Services</a>
-      <a href="/portfolio">Portfolio</a>
-      <a href="/about">About</a>
-      <a href="/shop">Shop</a>
-      <a href="/contact" class="rounded-md bg-paper px-3 py-1.5 text-ocean"> Book Us </a>
+    <button
+      id="menu-toggle"
+      class="relative z-50 w-6 h-5 flex flex-col justify-between focus:outline-none"
+      aria-label="Toggle menu"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+    >
+      <span class="bar block w-6 h-0.5 transition-all duration-300 origin-center"></span>
+      <span class="bar block w-6 h-0.5 transition-all duration-300 origin-center"></span>
+      <span class="bar block w-6 h-0.5 transition-all duration-300 origin-center"></span>
+    </button>
+
+    <div
+      id="mobile-menu"
+      class="fixed inset-0 h-screen z-40 flex flex-col items-center justify-center gap-10 bg-paper text-ocean uppercase text-2xl opacity-0 pointer-events-none transition-opacity duration-300"
+    >
+      {
+        nav.map(item => (
+          <a href={item.href} class="hover:opacity-60 transition-opacity">
+            {item.label}
+          </a>
+        ))
+      }
     </div>
   </nav>
 </header>
+
+<script>
+  window.addEventListener("DOMContentLoaded", () => {
+    const header = document.getElementById("site-header")
+    const isHomeHeader = header && header.dataset.home === "true"
+
+    if (isHomeHeader && header) {
+      let last = window.scrollY
+
+      const setTop = () => {
+        header.classList.remove("header-solid", "bg-paper", "text-ocean")
+        header.classList.add("text-white")
+        header.style.transform = "translateY(0)"
+      }
+
+      const setSolid = () => {
+        header.classList.add("header-solid", "bg-paper", "text-ocean")
+        header.classList.remove("text-white")
+        header.style.transform = "translateY(0)"
+      }
+
+      if (window.scrollY <= 0) {
+        setTop()
+      } else {
+        setSolid()
+      }
+
+      window.addEventListener("scroll", () => {
+        const y = window.scrollY
+
+        if (y <= 0) {
+          setTop()
+        } else if (y > last) {
+          header.style.transform = "translateY(-100%)"
+        } else {
+          setSolid()
+        }
+
+        last = y
+      })
+    }
+
+    const btn = document.getElementById("menu-toggle")
+    const menu = document.getElementById("mobile-menu")
+    if (!btn || !menu) return
+
+    const openMenu = () => {
+      btn.classList.add("open")
+      btn.setAttribute("aria-expanded", "true")
+      menu.classList.remove("opacity-0", "pointer-events-none")
+      menu.classList.add("opacity-100", "pointer-events-auto")
+      document.documentElement.classList.add("overflow-hidden")
+    }
+
+    const closeMenu = () => {
+      btn.classList.remove("open")
+      btn.setAttribute("aria-expanded", "false")
+      menu.classList.remove("opacity-100", "pointer-events-auto")
+      menu.classList.add("opacity-0", "pointer-events-none")
+      document.documentElement.classList.remove("overflow-hidden")
+    }
+
+    btn.addEventListener("click", () => {
+      const isOpen = btn.classList.contains("open")
+      if (isOpen) {
+        closeMenu()
+      } else {
+        openMenu()
+      }
+    })
+
+    menu.addEventListener("click", e => {
+      const el = e.target
+      if (el instanceof HTMLElement && el.tagName === "A") {
+        closeMenu()
+      }
+    })
+  })
+</script>
+
+<style>
+  #site-header .bar {
+    background-color: rgb(var(--ocean));
+  }
+
+  #menu-toggle.open .bar:nth-child(1) {
+    transform: translateY(9px) rotate(45deg);
+  }
+
+  #menu-toggle.open .bar:nth-child(2) {
+    opacity: 0;
+  }
+
+  #menu-toggle.open .bar:nth-child(3) {
+    transform: translateY(-9px) rotate(-45deg);
+  }
+
+  .bar {
+    transition:
+      transform 0.3s ease,
+      opacity 0.3s ease;
+  }
+</style>

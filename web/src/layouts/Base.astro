@@ -10,13 +10,19 @@ import StickyHeader from "../components/StickyHeader.astro"
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <title>{title}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Andada+Pro:ital,wght@0,400;0,500;0,600;1,400&display=swap"
+      rel="stylesheet"
+    />
     <meta name="description" content={description} />
   </head>
 
-  <body class="min-h-screen flex flex-col bg-paper text-ocean">
+  <body class="font-sans min-h-screen flex flex-col bg-paper text-ocean">
     <StickyHeader />
 
-    <main class="flex-1 pt-16">
+    <main class="flex-1">
       <slot />
     </main>
 

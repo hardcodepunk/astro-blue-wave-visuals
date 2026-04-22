@@ -7,6 +7,14 @@
   --ocean: 26 110 178;  /* #1A6EB2 */
 }
 
+@font-face {
+  font-family: "Nighty";
+  src: url("/font/Nighty.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 html, body {
   @apply antialiased bg-paper text-ocean;
 }

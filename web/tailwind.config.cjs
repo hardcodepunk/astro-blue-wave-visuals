@@ -9,8 +9,8 @@ module.exports = {
         black: "#000000",
       },
       fontFamily: {
-        display: ["'Playfair Display'", "serif"],
-        sans: ["Inter", "system-ui", "sans-serif"],
+        sans: ["Andada Pro", "serif"],
+        display: ["Nighty", "sans-serif"],
       },
     },
   },

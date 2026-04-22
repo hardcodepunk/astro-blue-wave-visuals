@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import "plyr/dist/plyr.css"
+import HeroButton from "./ui/HeroButton"
 
 type Props = {
   mp4?: string
@@ -160,7 +161,7 @@ export default function VideoHero({
   }, [])
 
   return (
-    <section className="relative h-[80vh] w-full overflow-hidden">
+    <section className="relative h-screen w-full overflow-hidden">
       <video
         ref={videoRef}
         className={`absolute inset-0 z-0 h-full w-full object-cover transition-opacity duration-700 ease-out ${
@@ -179,8 +180,8 @@ export default function VideoHero({
         {mp4 ? <source src={mp4} type="video/mp4" /> : null}
       </video>
 
+      <div className="pointer-events-none absolute inset-0 z-[5] bg-black/50" />
       <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-black/55 via-black/15 to-transparent" />
-
       <div
         className={`absolute inset-0 z-10 bg-black/40 transition-opacity duration-700 ease-out ${
           isPlaying ? "pointer-events-none opacity-0" : "opacity-100"
@@ -188,58 +189,43 @@ export default function VideoHero({
         aria-hidden="true"
       />
 
-      <div className="absolute inset-x-0 bottom-0 z-30 px-6 pb-8 sm:px-10 sm:pb-12">
-        <div className="mx-auto max-w-2xl text-center">
+      <div className="absolute inset-x-0 bottom-0 z-30 pb-8 sm:pb-12">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div
             className={`transition-all duration-700 ease-out ${
-              isPlaying ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+              isPlaying ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
             }`}
           >
-            <h1 className="font-display text-4xl uppercase tracking-[0.04em] text-white sm:text-5xl md:text-6xl">
-              {title}
-            </h1>
+            {subtitle ? <h2 className="max-w-4xl text-3xl text-paper">{subtitle}</h2> : null}
 
-            {subtitle ? (
-              <p className="mt-3 mx-auto max-w-lg text-sm leading-relaxed text-white/85 sm:text-base">{subtitle}</p>
-            ) : null}
-
-            <div className="mt-6 flex justify-center">
-              <button
-                type="button"
-                onClick={() => setIsModalOpen(true)}
-                aria-haspopup="dialog"
-                aria-controls="showreel-dialog"
-                className="inline-flex min-h-[46px] items-center justify-center border border-white bg-transparent px-7 py-3 text-[12px] font-medium uppercase tracking-[0.2em] text-white transition duration-200 hover:bg-white hover:text-black"
-              >
+            <div className="mt-6 flex">
+              <HeroButton onClick={() => setIsModalOpen(true)} aria-haspopup="dialog" aria-controls="showreel-dialog">
                 {showreelLabel}
-              </button>
+              </HeroButton>
             </div>
           </div>
         </div>
       </div>
 
       {isModalOpen && (
-        <div id="showreel-dialog" className="fixed inset-0 z-[120] grid place-items-center p-8 max-sm:p-4">
+        <div className="fixed inset-0 z-[120] grid place-items-center p-8 max-sm:p-4">
           <div
             className="absolute inset-0 bg-black/80 backdrop-blur-[6px]"
             onClick={() => setIsModalOpen(false)}
             aria-hidden="true"
           />
 
-          <button
-            type="button"
-            onClick={() => setIsModalOpen(false)}
-            className="absolute left-1/2 top-4 z-[3] -translate-x-1/2 border border-white bg-transparent px-6 py-3 text-[12px] font-medium uppercase tracking-[0.2em] text-white transition duration-200 hover:bg-white hover:text-black"
-          >
-            Close showreel
-          </button>
-
           <div
+            id="showreel-dialog"
             className="relative z-[1] w-full max-w-[1100px]"
             role="dialog"
             aria-modal="true"
             aria-label="Showreel video"
           >
+            <div className="absolute left-1/2 top-4 z-[3] -translate-x-1/2">
+              <HeroButton onClick={() => setIsModalOpen(false)}>Close showreel</HeroButton>
+            </div>
+
             <div className="overflow-hidden bg-black">
               <div
                 ref={playerTargetRef}
