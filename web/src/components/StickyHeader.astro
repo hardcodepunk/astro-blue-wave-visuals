@@ -3,43 +3,36 @@ const nav = [
   { href: "/services", label: "Services" },
   { href: "/about", label: "About" },
 ]
-
-const isHome = Astro.url.pathname === "/"
 ---
 
-<header
-  id="site-header"
-  data-home={isHome ? "true" : "false"}
-  class={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
-    isHome ? "text-white" : "bg-paper text-ocean header-solid"
-  }`}
->
-  <nav class="mx-auto flex h-[65px] md:h-[100px] max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8 relative">
-    <a href="/" class="flex h-full items-center">
-      <span class="header-title block text-ocean font-display uppercase text-xl md:text-4xl tracking-wide leading-none">
-        Bluewave Visuals
-      </span>
+<header id="site-header" class="fixed inset-x-0 top-0 z-50 bg-paper text-ocean">
+  <nav class="relative mx-auto flex h-[52px] max-w-6xl items-center justify-end px-4 sm:px-6 md:h-[72px] lg:px-8">
+    <a
+      href="/"
+      class="header-title pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-display text-xl uppercase tracking-wide text-ocean md:text-4xl leading-none whitespace-nowrap"
+    >
+      Bluewave Visuals
     </a>
 
     <button
       id="menu-toggle"
-      class="relative z-50 w-6 h-5 flex flex-col justify-between focus:outline-none"
+      class="relative z-50 flex h-5 w-6 flex-col justify-between focus:outline-none"
       aria-label="Toggle menu"
       aria-expanded="false"
       aria-controls="mobile-menu"
     >
-      <span class="bar block w-6 h-0.5 transition-all duration-300 origin-center"></span>
-      <span class="bar block w-6 h-0.5 transition-all duration-300 origin-center"></span>
-      <span class="bar block w-6 h-0.5 transition-all duration-300 origin-center"></span>
+      <span class="bar block h-0.5 w-6 origin-center transition-all duration-300"></span>
+      <span class="bar block h-0.5 w-6 origin-center transition-all duration-300"></span>
+      <span class="bar block h-0.5 w-6 origin-center transition-all duration-300"></span>
     </button>
 
     <div
       id="mobile-menu"
-      class="fixed inset-0 h-screen z-40 flex flex-col items-center justify-center gap-10 bg-paper text-ocean uppercase text-2xl opacity-0 pointer-events-none transition-opacity duration-300"
+      class="pointer-events-none fixed inset-0 z-40 flex h-screen flex-col items-center justify-center gap-10 bg-paper text-2xl uppercase text-ocean opacity-0 transition-opacity duration-300"
     >
       {
         nav.map(item => (
-          <a href={item.href} class="hover:opacity-60 transition-opacity">
+          <a href={item.href} class="transition-opacity hover:opacity-60">
             {item.label}
           </a>
         ))
@@ -50,45 +43,6 @@ const isHome = Astro.url.pathname === "/"
 
 <script>
   window.addEventListener("DOMContentLoaded", () => {
-    const header = document.getElementById("site-header")
-    const isHomeHeader = header && header.dataset.home === "true"
-
-    if (isHomeHeader && header) {
-      let last = window.scrollY
-
-      const setTop = () => {
-        header.classList.remove("header-solid", "bg-paper", "text-ocean")
-        header.classList.add("text-white")
-        header.style.transform = "translateY(0)"
-      }
-
-      const setSolid = () => {
-        header.classList.add("header-solid", "bg-paper", "text-ocean")
-        header.classList.remove("text-white")
-        header.style.transform = "translateY(0)"
-      }
-
-      if (window.scrollY <= 0) {
-        setTop()
-      } else {
-        setSolid()
-      }
-
-      window.addEventListener("scroll", () => {
-        const y = window.scrollY
-
-        if (y <= 0) {
-          setTop()
-        } else if (y > last) {
-          header.style.transform = "translateY(-100%)"
-        } else {
-          setSolid()
-        }
-
-        last = y
-      })
-    }
-
     const btn = document.getElementById("menu-toggle")
     const menu = document.getElementById("mobile-menu")
     if (!btn || !menu) return

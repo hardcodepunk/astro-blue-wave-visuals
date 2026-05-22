@@ -49,52 +49,16 @@ export default function VideoHero({
   subtitle,
   showreelUrl = DEFAULT_SHOWREEL_URL,
   showreelLabel = "Watch showreel",
-  minRevealMs = 600,
 }: Props) {
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const playerTargetRef = useRef<HTMLDivElement | null>(null)
   const playerInstanceRef = useRef<any>(null)
 
-  const [isPlaying, setIsPlaying] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [mountedAt] = useState(() => Date.now())
 
   const showreelId = useMemo(() => {
     return getYouTubeId(showreelUrl) ?? "cIFqyLFVG4g"
   }, [showreelUrl])
-
-  useEffect(() => {
-    const v = videoRef.current
-    if (!v) return
-
-    let revealed = false
-
-    const reveal = () => {
-      if (revealed) return
-      revealed = true
-      setIsPlaying(true)
-    }
-
-    const revealWithMin = () => {
-      const elapsed = Date.now() - mountedAt
-      const delay = Math.max(0, minRevealMs - elapsed)
-      window.setTimeout(reveal, delay)
-    }
-
-    const onPlaying = () => revealWithMin()
-    const onLoadedData = () => revealWithMin()
-
-    v.addEventListener("playing", onPlaying)
-    v.addEventListener("loadeddata", onLoadedData)
-
-    const hardTimeout = window.setTimeout(revealWithMin, 1500)
-
-    return () => {
-      v.removeEventListener("playing", onPlaying)
-      v.removeEventListener("loadeddata", onLoadedData)
-      window.clearTimeout(hardTimeout)
-    }
-  }, [mountedAt, minRevealMs])
 
   useEffect(() => {
     if (!isModalOpen) {
@@ -164,9 +128,7 @@ export default function VideoHero({
     <section className="relative h-screen w-full overflow-hidden">
       <video
         ref={videoRef}
-        className={`absolute inset-0 z-0 h-full w-full object-cover transition-opacity duration-700 ease-out ${
-          isPlaying ? "opacity-100" : "opacity-0"
-        }`}
+        className="absolute inset-0 z-0 h-full w-full object-cover"
         muted
         playsInline
         preload="metadata"
@@ -182,27 +144,15 @@ export default function VideoHero({
 
       <div className="pointer-events-none absolute inset-0 z-[5] bg-black/50" />
       <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-black/55 via-black/15 to-transparent" />
-      <div
-        className={`absolute inset-0 z-10 bg-black/40 transition-opacity duration-700 ease-out ${
-          isPlaying ? "pointer-events-none opacity-0" : "opacity-100"
-        }`}
-        aria-hidden="true"
-      />
 
       <div className="absolute inset-x-0 bottom-0 z-30 pb-8 sm:pb-12">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div
-            className={`transition-all duration-700 ease-out ${
-              isPlaying ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
-            }`}
-          >
-            {subtitle ? <h2 className="max-w-4xl text-3xl text-paper">{subtitle}</h2> : null}
+          {subtitle ? <h2 className="max-w-4xl text-3xl text-paper">{subtitle}</h2> : null}
 
-            <div className="mt-6 flex">
-              <HeroButton onClick={() => setIsModalOpen(true)} aria-haspopup="dialog" aria-controls="showreel-dialog">
-                {showreelLabel}
-              </HeroButton>
-            </div>
+          <div className="mt-6 flex">
+            <HeroButton onClick={() => setIsModalOpen(true)} aria-haspopup="dialog" aria-controls="showreel-dialog">
+              {showreelLabel}
+            </HeroButton>
           </div>
         </div>
       </div>

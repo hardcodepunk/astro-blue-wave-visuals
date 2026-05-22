@@ -1,6 +1,7 @@
 ---
 import Base from "../layouts/Base.astro"
 import VideoHero from "../components/VideoHero.tsx"
+import BioWithPreview from "../components/BioWithPreview.astro"
 import ServicesSection from "../components/ServicesSection.astro"
 import AboutTeaser from "../components/AboutTeaser.astro"
 import ContactCTA from "../components/ContactCTA.astro"
@@ -40,6 +41,8 @@ const heroPoster = settings?.heroPoster ?? undefined
 
 <Base title={siteTitle} description={siteDescription}>
   <VideoHero webm={heroWebm} mp4={heroMp4} poster={heroPoster} title={heroTitle} subtitle={heroSubtitle} client:load />
+
+  <BioWithPreview />
 
   <ServicesSection />
   <AboutTeaser />

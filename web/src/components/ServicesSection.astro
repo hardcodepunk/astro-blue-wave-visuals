@@ -1,6 +1,5 @@
 ---
 import { sanity } from "../lib/sanity"
-import Button from "../components/ui/Button"
 
 type Service = {
   title: string
@@ -24,13 +23,13 @@ const POSTER =
   "https://res.cloudinary.com/hardcodepunk/video/upload/q_auto:eco,so_0,f_jpg,w_1600/v1737957147/wsuszohtmu2pks673muc.jpg"
 ---
 
-<section class="w-full">
+<section class="grid w-full grid-cols-1 sm:grid-cols-2">
   {
     services.slice(0, 4).map((s, i) => (
-      <a href={s.href} class="service-parallax group relative block h-screen w-full overflow-hidden">
-        <div class="service-parallax-media absolute inset-0 z-0">
+      <a href={s.href} class="group relative block aspect-video w-full overflow-hidden">
+        <div class="absolute inset-0 z-0">
           <video
-            class="absolute left-0 top-1/2 h-[135%] w-full -translate-y-1/2 object-cover"
+            class="absolute left-0 top-1/2 h-[110%] w-full -translate-y-1/2 object-cover"
             muted
             playsinline
             autoplay
@@ -47,77 +46,12 @@ const POSTER =
         <div class="pointer-events-none absolute inset-0 z-[5] bg-black/50" />
         <div class="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-black/55 via-black/15 to-transparent" />
 
-        <div class="service-parallax-content absolute inset-x-0 bottom-0 z-30 px-6 pb-8 sm:px-10 sm:pb-12">
-          <div class="mx-auto max-w-6xl text-center">
-            <h2 class="font-display text-7xl uppercase text-ocean sm:text-8xl lg:text-9xl">{s.title}</h2>
+        <div class="absolute inset-x-0 bottom-0 z-30 px-6 pb-6 text-left sm:px-8 sm:pb-8">
+          <h2 class="font-display text-3xl uppercase text-ocean sm:text-4xl lg:text-5xl">{s.title}</h2>
 
-            {s.subtitle ? <p class="mx-auto pb-8 text-base uppercase text-paper sm:text-xl">{s.subtitle}</p> : null}
-
-            <div class="mt-6 flex justify-center">
-              <Button size="sm">View service</Button>
-            </div>
-          </div>
+          {s.subtitle ? <p class="pt-2 text-xs uppercase text-paper sm:text-sm">{s.subtitle}</p> : null}
         </div>
       </a>
     ))
   }
 </section>
-
-<style>
-  .service-parallax-media {
-    transform: translate3d(0, 0, 0) scale(1.18);
-    will-change: transform;
-  }
-
-  .service-parallax-content {
-    will-change: transform, opacity;
-  }
-</style>
-
-<script>
-  const sections = Array.from(document.querySelectorAll(".service-parallax"))
-
-  const clamp = (v: number, min: number, max: number): number => Math.min(Math.max(v, min), max)
-
-  const updateParallax = () => {
-    const vh = window.innerHeight
-
-    sections.forEach(section => {
-      const media = section.querySelector(".service-parallax-media") as HTMLElement | null
-      const content = section.querySelector(".service-parallax-content") as HTMLElement | null
-      if (!media) return
-
-      const rect = section.getBoundingClientRect()
-      const center = rect.top + rect.height / 2
-      const offset = center - vh / 2
-      const progress = clamp(offset / vh, -1.4, 1.4)
-
-      const mediaY = progress * -240
-      const contentY = progress * 40
-
-      media.style.transform = `translate3d(0, ${mediaY}px, 0) scale(1.18)`
-
-      if (content) {
-        content.style.transform = `translate3d(0, ${contentY}px, 0)`
-        content.style.opacity = `${1 - Math.abs(progress) * 0.15}`
-      }
-    })
-  }
-
-  let ticking = false
-
-  const requestTick = () => {
-    if (ticking) return
-    ticking = true
-
-    requestAnimationFrame(() => {
-      updateParallax()
-      ticking = false
-    })
-  }
-
-  updateParallax()
-  window.addEventListener("scroll", requestTick, { passive: true })
-  window.addEventListener("resize", requestTick)
-  window.addEventListener("load", requestTick)
-</script>
