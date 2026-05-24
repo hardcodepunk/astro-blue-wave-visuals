@@ -1,10 +1,16 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 :root {
   --paper: 255 234 207; /* #FFEACF */
   --ocean: 26 110 178;  /* #1A6EB2 */
+}
+
+@theme {
+  --color-paper: rgb(var(--paper));
+  --color-ocean: rgb(var(--ocean));
+  --color-black: #000000;
+  --font-sans: "Andada Pro", serif;
+  --font-display: "Nighty", sans-serif;
 }
 
 @font-face {
@@ -15,6 +21,7 @@
   font-display: swap;
 }
 
-html, body {
+html,
+body {
   @apply antialiased bg-paper text-ocean;
 }
