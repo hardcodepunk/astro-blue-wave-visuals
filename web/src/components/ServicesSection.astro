@@ -1,136 +1,93 @@
 ---
-import { sanity } from "../lib/sanity"
+import { sanity, urlFor } from "../lib/sanity"
 
 type Service = {
+  _id: string
   title: string
   subtitle?: string
-  href: string
+  href?: string
+  image?: { asset?: { _ref: string } }
 }
 
-const services: Service[] = await sanity.fetch(`*[_type == "service"]|order(order asc){
-  title,
-  subtitle,
-  href
-}`)
+const services: Service[] = await sanity.fetch(`
+  *[_type == "service"] | order(order asc, _createdAt asc) {
+    _id,
+    title,
+    subtitle,
+    href,
+    image
+  }
+`)
 
-const MP4 =
-  "https://res.cloudinary.com/hardcodepunk/video/upload/q_auto:eco,vc_h264,ac_aac,f_mp4/v1737957147/wsuszohtmu2pks673muc.mp4"
-
-const WEBM =
-  "https://res.cloudinary.com/hardcodepunk/video/upload/q_auto:eco,vc_vp9,f_webm/v1761381373/b8f7chk3u9s6jaqh4bae.webm"
-
-const POSTER =
+const FALLBACK_IMAGE =
   "https://res.cloudinary.com/hardcodepunk/video/upload/q_auto:eco,so_0,f_jpg,w_1600/v1737957147/wsuszohtmu2pks673muc.jpg"
+
+function srcFor(s: Service): string {
+  if (s.image?.asset) {
+    return urlFor(s.image).width(1600).height(900).fit("crop").url()
+  }
+  return FALLBACK_IMAGE
+}
 ---
 
-<section class="w-full">
-  {
-    services.slice(0, 4).map((s, i) => (
-      <a href={s.href} class="service-parallax group relative block h-screen w-full">
-        <div class="absolute inset-0 overflow-hidden">
-          <div class="service-parallax-media absolute inset-0 z-0">
-            <video
-              class="absolute left-0 top-1/2 h-[135%] w-full -translate-y-1/2 object-cover"
-              muted
-              playsinline
-              autoplay
-              loop
-              preload={i === 0 ? "auto" : "metadata"}
-              poster={POSTER}
-              aria-hidden="true"
+<section class="bg-paper py-20 md:py-24">
+  <div class="mx-auto max-w-6xl px-4">
+    <div class="text-center">
+      <p class="text-xs uppercase tracking-[0.25em] text-ocean/70 sm:text-sm">
+        What we do
+      </p>
+      <h2 class="mt-2 font-display text-5xl uppercase leading-[0.95] tracking-wide text-ocean sm:text-6xl md:text-7xl">
+        Categories
+      </h2>
+    </div>
+
+    <div class="mt-12 grid gap-6 md:mt-16 md:grid-cols-2 md:gap-8">
+      {
+        services.map(s => {
+          const Wrapper = (s.href ? "a" : "div") as "a" | "div"
+          const wrapperProps = s.href ? { href: s.href } : {}
+
+          return (
+            <Wrapper
+              {...wrapperProps}
+              class="group relative block overflow-hidden bg-ocean"
             >
-              <source src={WEBM} type="video/webm" />
-              <source src={MP4} type="video/mp4" />
-            </video>
-          </div>
+              <img
+                src={srcFor(s)}
+                alt=""
+                loading="lazy"
+                decoding="async"
+                class="block aspect-video w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+              />
 
-          <div class="pointer-events-none absolute inset-0 z-[5] bg-black/50" />
-          <div class="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-black/55 via-black/15 to-transparent" />
-        </div>
+              <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/25 to-transparent transition-opacity duration-500 group-hover:from-black/80" />
 
-        <div class="service-parallax-content pointer-events-none absolute inset-0 z-30 flex items-center justify-center px-6 text-center sm:px-10">
-          <div class="max-w-6xl">
-            <h2 class="font-display text-7xl uppercase leading-[0.85] text-ocean sm:text-8xl lg:text-9xl">{s.title}</h2>
+              <div class="pointer-events-none absolute inset-x-0 bottom-0 px-6 pb-6 sm:px-8 sm:pb-8">
+                <h3 class="font-display text-3xl uppercase leading-[0.95] tracking-wide text-paper sm:text-4xl lg:text-5xl">
+                  {s.title}
+                </h3>
 
-            {s.subtitle ? <p class="pt-4 text-base uppercase text-paper sm:text-xl">{s.subtitle}</p> : null}
-          </div>
-        </div>
-      </a>
-    ))
-  }
-</section>
+                {s.subtitle && (
+                  <p class="mt-2 max-w-md text-xs uppercase tracking-[0.2em] text-paper/80 sm:text-sm">
+                    {s.subtitle}
+                  </p>
+                )}
+              </div>
 
-<style>
-  .service-parallax-media {
-    transform: translate3d(0, 0, 0) scale(1.18);
-    will-change: transform;
-  }
-
-  .service-parallax-content {
-    will-change: transform, opacity;
-  }
-</style>
-
-<script>
-  const sections = Array.from(document.querySelectorAll(".service-parallax"))
-
-  const clamp = (v: number, min: number, max: number): number => Math.min(Math.max(v, min), max)
-
-  const updateParallax = () => {
-    const vh = window.innerHeight
-
-    sections.forEach(section => {
-      const media = section.querySelector(".service-parallax-media") as HTMLElement | null
-      const content = section.querySelector(".service-parallax-content") as HTMLElement | null
-      if (!media) return
-
-      const rect = section.getBoundingClientRect()
-      const center = rect.top + rect.height / 2
-      const offset = center - vh / 2
-      const progress = clamp(offset / vh, -1.4, 1.4)
-
-      const mediaY = progress * -240
-
-      media.style.transform = `translate3d(0, ${mediaY}px, 0) scale(1.18)`
-
-      if (content) {
-        // Anchor the title near viewport center (counter the panel's own
-        // scroll), then layer a slower-than-scroll drift on top so it has
-        // real parallax — title scrolls at roughly 50% of page-scroll rate.
-        const CONTENT_PARALLAX = 0.5
-        const contentY = -rect.top + progress * vh * CONTENT_PARALLAX
-
-        // Panel boundary "hits" the viewport center at |progress| = 0.5.
-        // Long plateau at opacity 1, fast snap to 0 — fade still completes
-        // before 0.5 so the title never sits on the boundary line.
-        const abs = Math.abs(progress)
-        const PLATEAU = 0.15
-        const FADE = 0.15
-        const t = clamp((abs - PLATEAU) / FADE, 0, 1)
-        // Smoothstep keeps the transition itself easy on the eye.
-        const eased = t * t * (3 - 2 * t)
-        const opacity = 1 - eased
-
-        content.style.transform = `translate3d(0, ${contentY}px, 0)`
-        content.style.opacity = `${opacity}`
+              {s.href && (
+                <span
+                  aria-hidden="true"
+                  class="pointer-events-none absolute right-6 top-6 flex h-10 w-10 items-center justify-center rounded-full border border-paper/40 text-paper transition group-hover:border-paper group-hover:bg-paper/10 sm:right-8 sm:top-8"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M9 7h8v8" />
+                  </svg>
+                </span>
+              )}
+            </Wrapper>
+          )
+        })
       }
-    })
-  }
-
-  let ticking = false
-
-  const requestTick = () => {
-    if (ticking) return
-    ticking = true
-
-    requestAnimationFrame(() => {
-      updateParallax()
-      ticking = false
-    })
-  }
-
-  updateParallax()
-  window.addEventListener("scroll", requestTick, { passive: true })
-  window.addEventListener("resize", requestTick)
-  window.addEventListener("load", requestTick)
-</script>
+    </div>
+  </div>
+</section>
