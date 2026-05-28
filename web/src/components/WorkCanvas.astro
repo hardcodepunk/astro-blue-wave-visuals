@@ -42,7 +42,7 @@ const ctaHref = doc?.ctaHref ?? "/projects"
 {
   items.length > 0 && (
     <section class="bg-paper py-20 md:py-24">
-      <div class="mx-auto max-w-6xl px-4">
+      <div class="mx-auto w-full max-w-[1800px] px-3 sm:px-4">
         <div class="canvas-grid">
           {items.map(item =>
             item.kind === "video" ? (
@@ -93,11 +93,7 @@ const ctaHref = doc?.ctaHref ?? "/projects"
   @media (min-width: 768px) {
     .canvas-grid {
       column-count: 3;
-    }
-  }
-  @media (min-width: 1024px) {
-    .canvas-grid {
-      column-count: 4;
+      column-gap: 1rem;
     }
   }
 
@@ -107,8 +103,12 @@ const ctaHref = doc?.ctaHref ?? "/projects"
     height: auto;
     margin-bottom: 0.75rem;
     break-inside: avoid;
-    /* break-inside on a video is finicky in some browsers; this hint helps */
     -webkit-column-break-inside: avoid;
     page-break-inside: avoid;
+  }
+  @media (min-width: 768px) {
+    .canvas-item {
+      margin-bottom: 1rem;
+    }
   }
 </style>
