@@ -43,14 +43,7 @@ const ctaHref = doc?.ctaHref ?? "/projects"
   items.length > 0 && (
     <section class="bg-paper py-20 md:py-24">
       <div class="mx-auto max-w-6xl px-4">
-        <div class="text-center">
-          <p class="text-xs uppercase tracking-[0.25em] text-ocean/70 sm:text-sm">{eyebrow}</p>
-          <h2 class="mt-2 font-display text-5xl uppercase leading-[0.95] tracking-wide text-ocean sm:text-6xl md:text-7xl">
-            {heading}
-          </h2>
-        </div>
-
-        <div class="canvas-grid mt-12 md:mt-16">
+        <div class="canvas-grid">
           {items.map(item =>
             item.kind === "video" ? (
               <video
