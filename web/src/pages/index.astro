@@ -1,7 +1,6 @@
 ---
 import Base from "../layouts/Base.astro"
 import VideoHero from "../components/VideoHero.tsx"
-import ShowreelSection from "../components/ShowreelSection.astro"
 import ServicesSection from "../components/ServicesSection.astro"
 import BioWithPreview from "../components/BioWithPreview.astro"
 import TrustedBy from "../components/TrustedBy.astro"
@@ -17,6 +16,7 @@ type SiteSettings = {
   heroMp4?: string
   heroWebm?: string
   heroPoster?: string
+  showreelUrl?: string
 } | null
 
 const settings = await sanity.fetch<SiteSettings>(`
@@ -27,7 +27,8 @@ const settings = await sanity.fetch<SiteSettings>(`
     heroSubtitle,
     heroMp4,
     heroWebm,
-    heroPoster
+    heroPoster,
+    showreelUrl
   }
 `)
 
@@ -39,12 +40,19 @@ const heroSubtitle = settings?.heroSubtitle ?? ""
 const heroMp4 = settings?.heroMp4 ?? undefined
 const heroWebm = settings?.heroWebm ?? undefined
 const heroPoster = settings?.heroPoster ?? undefined
+const showreelUrl = settings?.showreelUrl ?? undefined
 ---
 
 <Base title={siteTitle} description={siteDescription}>
-  <VideoHero webm={heroWebm} mp4={heroMp4} poster={heroPoster} title={heroTitle} subtitle={heroSubtitle} />
-
-  <ShowreelSection />
+  <VideoHero
+    webm={heroWebm}
+    mp4={heroMp4}
+    poster={heroPoster}
+    title={heroTitle}
+    subtitle={heroSubtitle}
+    showreelUrl={showreelUrl}
+    client:load
+  />
 
   <ServicesSection />
 
