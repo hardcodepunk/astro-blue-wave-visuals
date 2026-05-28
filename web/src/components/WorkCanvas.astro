@@ -1,0 +1,121 @@
+---
+import { sanity } from "../lib/sanity"
+
+type Item = {
+  _key?: string
+  kind?: "image" | "video"
+  imageUrl?: string
+  videoMp4?: string
+  videoWebm?: string
+  videoPoster?: string
+  alt?: string
+}
+
+type Doc = {
+  eyebrow?: string
+  heading?: string
+  items?: Item[]
+  ctaLabel?: string
+  ctaHref?: string
+} | null
+
+const doc = await sanity.fetch<Doc>(`
+  *[_type == "workCanvas" && _id == "workCanvas"][0]{
+    eyebrow,
+    heading,
+    items,
+    ctaLabel,
+    ctaHref
+  }
+`)
+
+const eyebrow = doc?.eyebrow ?? "Recent visuals"
+const heading = doc?.heading ?? "Selected work"
+const items = (doc?.items ?? []).filter(it => {
+  if (it.kind === "video") return Boolean(it.videoMp4 || it.videoWebm)
+  return Boolean(it.imageUrl)
+})
+const ctaLabel = doc?.ctaLabel ?? "All work"
+const ctaHref = doc?.ctaHref ?? "/projects"
+---
+
+{
+  items.length > 0 && (
+    <section class="bg-paper py-20 md:py-24">
+      <div class="mx-auto max-w-6xl px-4">
+        <div class="text-center">
+          <p class="text-xs uppercase tracking-[0.25em] text-ocean/70 sm:text-sm">{eyebrow}</p>
+          <h2 class="mt-2 font-display text-5xl uppercase leading-[0.95] tracking-wide text-ocean sm:text-6xl md:text-7xl">
+            {heading}
+          </h2>
+        </div>
+
+        <div class="canvas-grid mt-12 md:mt-16">
+          {items.map(item =>
+            item.kind === "video" ? (
+              <video
+                class="canvas-item"
+                muted
+                playsinline
+                autoplay
+                loop
+                preload="metadata"
+                poster={item.videoPoster}
+                aria-label={item.alt}
+              >
+                {item.videoWebm && <source src={item.videoWebm} type="video/webm" />}
+                {item.videoMp4 && <source src={item.videoMp4} type="video/mp4" />}
+              </video>
+            ) : (
+              <img
+                src={item.imageUrl}
+                alt={item.alt ?? ""}
+                loading="lazy"
+                decoding="async"
+                class="canvas-item"
+              />
+            ),
+          )}
+        </div>
+
+        <div class="mt-12 flex justify-center md:mt-16">
+          <a
+            href={ctaHref}
+            class="inline-flex items-center justify-center rounded-full border border-ocean px-8 py-3 font-display text-base uppercase tracking-wide text-ocean transition hover:bg-ocean hover:text-paper sm:text-lg"
+          >
+            {ctaLabel}
+          </a>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  /* Masonry-style auto-fitting canvas via CSS multi-column layout. */
+  .canvas-grid {
+    column-count: 2;
+    column-gap: 0.75rem;
+  }
+  @media (min-width: 768px) {
+    .canvas-grid {
+      column-count: 3;
+    }
+  }
+  @media (min-width: 1024px) {
+    .canvas-grid {
+      column-count: 4;
+    }
+  }
+
+  .canvas-item {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-bottom: 0.75rem;
+    break-inside: avoid;
+    /* break-inside on a video is finicky in some browsers; this hint helps */
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+  }
+</style>

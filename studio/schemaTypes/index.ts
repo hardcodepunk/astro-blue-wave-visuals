@@ -6,6 +6,7 @@ import {aboutTeaser} from './aboutTeaser'
 import {bioWithPreview} from './bioWithPreview'
 import {trustedBy} from './trustedBy'
 import {processSteps} from './processSteps'
+import {workCanvas} from './workCanvas'
 
 export const schemaTypes = [
   siteSettings,
@@ -16,4 +17,5 @@ export const schemaTypes = [
   bioWithPreview,
   trustedBy,
   processSteps,
+  workCanvas,
 ]
