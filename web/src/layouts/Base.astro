@@ -3,6 +3,7 @@ const { title = "Bluewave Visuals", description = "Cinematic storytelling throug
   Astro.props
 import "../styles/globals.css"
 import StickyHeader from "../components/StickyHeader.astro"
+import SiteFooter from "../components/SiteFooter.astro"
 ---
 
 <html lang="en">
@@ -25,5 +26,7 @@ import StickyHeader from "../components/StickyHeader.astro"
     <main class="flex-1">
       <slot />
     </main>
+
+    <SiteFooter />
   </body>
 </html>

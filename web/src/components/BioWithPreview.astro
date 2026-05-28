@@ -20,7 +20,7 @@ const bio = doc?.bio ?? DEFAULT_BIO
 const textScale = Math.min(1.4, Math.max(0.75, (doc?.bioTextScale ?? 100) / 100))
 ---
 
-<section class="bg-paper py-24 text-ocean md:py-32">
+<section id="bio" class="bg-paper py-24 text-ocean md:py-32">
   <div class="mx-auto max-w-3xl px-4 text-center" style={`--bio-scale: ${textScale};`}>
     <p class="bp-bio whitespace-pre-line">{bio}</p>
   </div>
