@@ -1,8 +1,9 @@
 ---
 import Base from "../layouts/Base.astro"
 import VideoHero from "../components/VideoHero.tsx"
-import ServicesSection from "../components/ServicesSection.astro"
 import BioWithPreview from "../components/BioWithPreview.astro"
+import RecentProjects from "../components/RecentProjects.astro"
+import ServicesSection from "../components/ServicesSection.astro"
 import TrustedBy from "../components/TrustedBy.astro"
 import ProcessSection from "../components/ProcessSection.astro"
 import ContactSection from "../components/ContactSection.astro"
@@ -54,9 +55,11 @@ const showreelUrl = settings?.showreelUrl ?? undefined
     client:load
   />
 
-  <ServicesSection />
-
   <BioWithPreview />
+
+  <RecentProjects />
+
+  <ServicesSection />
 
   <TrustedBy />
 
