@@ -139,18 +139,14 @@ export default function VideoHero({
       <div className="pointer-events-none absolute inset-0 z-[5] bg-black/50" />
       <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-black/55 via-black/15 to-transparent" />
 
-      {subtitle ? (
-        <div className="pointer-events-none absolute inset-0 z-30 flex items-center">
-          <div className="mx-auto w-full max-w-6xl px-6 sm:px-10 lg:px-12">
-            <p className="max-w-none whitespace-pre-line text-left font-display text-6xl uppercase leading-[0.82] tracking-wide text-paper sm:text-8xl md:text-[9rem] lg:text-[12rem]">
-              {subtitle}
-            </p>
-          </div>
-        </div>
-      ) : null}
+      <div className="absolute inset-0 z-30 flex flex-col items-center justify-center px-6 text-center sm:px-10">
+        {subtitle ? (
+          <p className="max-w-[18ch] whitespace-pre-line font-display text-6xl uppercase leading-[0.82] tracking-wide text-paper sm:max-w-[20ch] sm:text-8xl md:text-[9rem] lg:text-[12rem]">
+            {subtitle}
+          </p>
+        ) : null}
 
-      <div className="absolute inset-x-0 bottom-0 z-30 pb-10 sm:pb-14">
-        <div className="mx-auto flex w-full max-w-6xl px-6 sm:px-10 lg:px-12">
+        <div className="mt-10 sm:mt-14">
           <HeroButton onClick={() => setIsModalOpen(true)} aria-haspopup="dialog" aria-controls="showreel-dialog">
             {showreelLabel}
           </HeroButton>
