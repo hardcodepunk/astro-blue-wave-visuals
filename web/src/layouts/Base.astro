@@ -3,6 +3,26 @@ const { title = "Bluewave Visuals", description = "Cinematic storytelling throug
   Astro.props
 import "../styles/globals.css"
 import StickyHeader from "../components/StickyHeader.astro"
+import { sanity } from "../lib/sanity"
+
+type FooterSettings = {
+  contactEmail?: string
+  instagramUrl?: string
+  shopUrl?: string
+} | null
+
+const footerSettings = await sanity.fetch<FooterSettings>(`
+  *[_type == "siteSettings" && _id == "siteSettings"][0]{
+    contactEmail,
+    instagramUrl,
+    shopUrl
+  }
+`)
+
+const email = footerSettings?.contactEmail ?? "info@bluewavevisuals.com"
+const instagram = footerSettings?.instagramUrl ?? "https://www.instagram.com/bluewave.visuals/"
+const shop = footerSettings?.shopUrl
+const year = new Date().getFullYear()
 ---
 
 <html lang="en">
@@ -25,5 +45,23 @@ import StickyHeader from "../components/StickyHeader.astro"
     <main class="flex-1">
       <slot />
     </main>
+
+    <footer class="border-t border-ocean/15 bg-paper py-8 text-ocean">
+      <div class="mx-auto flex max-w-6xl flex-col items-center gap-4 px-4 text-sm sm:flex-row sm:justify-between">
+        <p class="font-display uppercase tracking-wide">© {year} Bluewave Visuals</p>
+
+        <div class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+          <a class="transition hover:opacity-70" href={`mailto:${email}`}>{email}</a>
+          <a class="transition hover:opacity-70" href={instagram} target="_blank" rel="noopener noreferrer">
+            Instagram
+          </a>
+          {shop && (
+            <a class="transition hover:opacity-70" href={shop} target="_blank" rel="noopener noreferrer">
+              Shop
+            </a>
+          )}
+        </div>
+      </div>
+    </footer>
   </body>
 </html>

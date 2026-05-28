@@ -41,6 +41,23 @@ export const siteSettings = defineType({
       type: 'url',
     }),
     defineField({
+      name: 'showreelUrl',
+      title: 'Showreel URL',
+      description: 'YouTube or Vimeo URL for the showreel modal.',
+      type: 'url',
+    }),
+    defineField({
+      name: 'showreelPoster',
+      title: 'Showreel poster URL',
+      description: 'Optional still frame shown before the reel plays.',
+      type: 'url',
+    }),
+    defineField({
+      name: 'contactEmail',
+      title: 'Contact email',
+      type: 'string',
+    }),
+    defineField({
       name: 'shopUrl',
       title: 'Shop URL',
       type: 'url',
