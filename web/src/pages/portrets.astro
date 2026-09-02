@@ -1,0 +1,25 @@
+---
+import GalleryWall from "~/components/GalleryWall.astro";
+import Nav from "~/components/Nav.astro";
+import Base from "~/layouts/Base.astro";
+import { portraitsGallery, site } from "~/data/site";
+---
+
+<Base
+  title={`Portraits — ${site.name}`}
+  description="Quiet, honest portraits made in the water, on the road, and in the in-between moments."
+  grain={false}
+>
+  <main class="relative min-h-screen bg-background text-foreground">
+    <Nav variant="gallery" />
+
+    <header class="px-6 pb-8 pt-10 md:px-10 md:pb-12 md:pt-16">
+      <p class="mb-3 text-xs uppercase tracking-[0.3em] text-primary/70">
+        — Gallery
+      </p>
+      <h1 class="font-serif text-4xl text-primary md:text-6xl">Portraits</h1>
+    </header>
+
+    <GalleryWall images={portraitsGallery} label="Portrait" />
+  </main>
+</Base>

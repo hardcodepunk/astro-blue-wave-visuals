@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.astro/
+.env
+.env.production
+.DS_Store
+.idea/
+.vscode/
+npm-debug.log*
+
+# Site video — ~400MB, and two files exceed GitHub's 100MB per-file limit.
+# Restore with ./scripts/fetch-media.sh
+web/public/media/*.mp4
+web/public/media/*.mov

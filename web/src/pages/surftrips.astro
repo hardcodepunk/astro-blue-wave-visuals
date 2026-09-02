@@ -1,0 +1,328 @@
+---
+import BookingCard from "~/components/BookingCard.astro";
+import Icon from "~/components/Icon.astro";
+import Nav from "~/components/Nav.astro";
+import Base from "~/layouts/Base.astro";
+import { site } from "~/data/site";
+import { retreat, safari, surftrips, tripCards } from "~/data/surftrips";
+---
+
+<Base
+  title={`Surftrips — ${site.name}`}
+  description="Bluewave Visuals × Snoopy. Join us in Morocco for the ultimate surf experience — Surfsafari and Surfretreat, January 2027."
+>
+  <main class="relative overflow-x-hidden bg-background text-foreground">
+    <Nav variant="trips" />
+
+    <!-- Hero -->
+    <section
+      class="relative isolate flex min-h-[80vh] flex-col items-center justify-center overflow-hidden px-6 pb-20 pt-32 text-center"
+    >
+      <div class="absolute inset-0 -z-10">
+        <img
+          src={surftrips.heroImage}
+          alt="Surfers watching the swell in Morocco"
+          class="h-full w-full object-cover"
+          fetchpriority="high"
+        />
+      </div>
+
+      <p class="text-xs uppercase tracking-[0.4em] text-primary/70">
+        {surftrips.eyebrow}
+      </p>
+      <h1 class="mt-6 text-6xl leading-[0.95] text-primary md:text-[9rem]">
+        {surftrips.heroTitle}
+      </h1>
+      <p class="mt-6 max-w-xl text-base text-foreground/80 md:text-lg">
+        {surftrips.heroSubtitle}
+      </p>
+    </section>
+
+    <!-- Level picker -->
+    <section class="relative px-6 py-24 md:px-12">
+      <div class="mx-auto max-w-6xl">
+        <h2
+          class="text-center text-4xl text-primary md:text-6xl"
+          data-reveal="up"
+        >
+          What's your level?
+        </h2>
+        <p
+          class="mx-auto mt-4 max-w-xl text-center text-sm text-foreground/70 md:text-base"
+          data-reveal="up"
+          style="--reveal-delay: 0.1s"
+        >
+          Pick the trip that matches your surf experience.
+        </p>
+
+        <div class="mt-14 grid gap-8 md:grid-cols-2">
+          {
+            tripCards.map((card, i) => (
+              <a
+                href={`#${card.target}`}
+                class="group relative block rounded-3xl border-2 border-primary bg-background p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl md:p-10"
+                data-reveal="up"
+                style={`--reveal-delay: ${i * 0.12}s`}
+              >
+                <div class="overflow-hidden rounded-2xl">
+                  <img
+                    src={card.image}
+                    alt={card.subtitle}
+                    loading="lazy"
+                    decoding="async"
+                    class="aspect-[4/3] w-full rounded-2xl object-cover transition-transform duration-700 group-hover:scale-[1.08]"
+                  />
+                </div>
+
+                <p class="mt-6 text-xs uppercase tracking-[0.3em] text-primary/60">
+                  {card.subtitle}
+                </p>
+                <h3 class="mt-2 text-3xl text-primary md:text-4xl">
+                  {card.title}
+                </h3>
+
+                <ul class="mt-6 space-y-3">
+                  {card.points.map((point) => (
+                    <li class="flex items-start gap-3 text-sm text-foreground/85">
+                      <Icon
+                        name="check"
+                        class="mt-0.5 size-4 shrink-0 text-primary"
+                      />
+                      <span>{point}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <span class="mt-8 inline-flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-primary transition-all group-hover:gap-3">
+                  View this trip →
+                </span>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Surfsafari -->
+    <section id="safari" class="relative bg-primary/5 px-6 py-24 md:px-12">
+      <div class="mx-auto max-w-6xl">
+        <p
+          class="text-xs uppercase tracking-[0.3em] text-primary/70"
+          data-reveal="up"
+        >
+          {safari.eyebrow}
+        </p>
+        <h2
+          class="mt-3 text-5xl text-primary md:text-8xl"
+          data-reveal="up"
+          style="--reveal-delay: 0.1s"
+        >
+          {safari.title}
+        </h2>
+        <p
+          class="mt-3 text-sm uppercase tracking-[0.25em] text-primary/80"
+          data-reveal="up"
+          style="--reveal-delay: 0.2s"
+        >
+          {safari.dates}
+        </p>
+
+        <div class="mt-10 grid gap-10 md:grid-cols-[1.2fr_1fr]">
+          <p
+            class="text-base leading-relaxed text-foreground/85 md:text-lg"
+            data-reveal="left"
+          >
+            {safari.intro}
+          </p>
+          <video
+            src={safari.video}
+            autoplay
+            muted
+            loop
+            playsinline
+            controls
+            preload="metadata"
+            class="aspect-[4/5] w-full rounded-2xl object-cover shadow-lg"
+            data-reveal="right"></video>
+        </div>
+
+        <h3 class="mt-16 text-2xl text-primary md:text-3xl" data-reveal="up">
+          What to expect
+        </h3>
+
+        <ul class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {
+            safari.expect.map((item, i) => (
+              <li
+                class="flex items-start gap-3 rounded-xl border border-primary/20 bg-background p-4 text-sm text-foreground/85 transition-transform duration-300 hover:-translate-y-1"
+                data-reveal="up"
+                style={`--reveal-delay: ${i * 0.05}s`}
+              >
+                <Icon name="check" class="mt-0.5 size-4 shrink-0 text-primary" />
+                <span>{item}</span>
+              </li>
+            ))
+          }
+        </ul>
+
+        <div class="mt-12 grid gap-6 md:grid-cols-3">
+          {
+            safari.gallery.map((shot, i) => (
+              <div
+                class="group overflow-hidden rounded-2xl shadow-lg"
+                data-reveal="up"
+                style={`--reveal-delay: ${i * 0.12}s`}
+              >
+                <img
+                  src={shot.src}
+                  alt={shot.alt}
+                  loading="lazy"
+                  decoding="async"
+                  class="aspect-square w-full object-cover transition-transform duration-700 group-hover:scale-[1.1]"
+                />
+              </div>
+            ))
+          }
+        </div>
+
+        <BookingCard
+          price={safari.price}
+          spotsLeft={safari.spotsLeft}
+          totalSpots={safari.totalSpots}
+        />
+      </div>
+    </section>
+
+    <!-- Surfretreat -->
+    <section id="retreat" class="relative px-6 py-24 md:px-12">
+      <div class="mx-auto max-w-6xl">
+        <p
+          class="text-xs uppercase tracking-[0.3em] text-primary/70"
+          data-reveal="up"
+        >
+          {retreat.eyebrow}
+        </p>
+        <h2
+          class="mt-3 text-5xl text-primary md:text-8xl"
+          data-reveal="up"
+          style="--reveal-delay: 0.1s"
+        >
+          {retreat.title}
+        </h2>
+        <p
+          class="mt-3 text-sm uppercase tracking-[0.25em] text-primary/80"
+          data-reveal="up"
+          style="--reveal-delay: 0.2s"
+        >
+          {retreat.dates}
+        </p>
+
+        <div class="mt-10 grid gap-10 md:grid-cols-[1fr_1.2fr]">
+          <video
+            src={retreat.video}
+            autoplay
+            muted
+            loop
+            playsinline
+            controls
+            preload="metadata"
+            class="aspect-[4/5] w-full rounded-2xl object-cover shadow-lg"
+            data-reveal="left"></video>
+          <p
+            class="text-base leading-relaxed text-foreground/85 md:text-lg"
+            data-reveal="right"
+          >
+            {retreat.intro}
+          </p>
+        </div>
+
+        <h3 class="mt-16 text-2xl text-primary md:text-3xl" data-reveal="up">
+          Pricing
+        </h3>
+
+        <div class="mt-6 grid gap-5 sm:grid-cols-2">
+          {
+            retreat.pricing.map((tier, i) => (
+              <div
+                class="rounded-2xl border-2 border-primary/30 bg-background p-6 transition-transform duration-300 hover:-translate-y-1.5"
+                data-reveal="up"
+                style={`--reveal-delay: ${i * 0.1}s`}
+              >
+                <p class="text-sm uppercase tracking-[0.2em] text-primary/70">
+                  {tier.label}
+                </p>
+                <p class="mt-3 text-4xl text-primary">{tier.price}</p>
+                <p class="mt-1 text-sm text-foreground/70">{tier.note}</p>
+              </div>
+            ))
+          }
+        </div>
+
+        <h3 class="mt-16 text-2xl text-primary md:text-3xl" data-reveal="up">
+          Included in the price
+        </h3>
+
+        <div class="mt-6 grid gap-5 md:grid-cols-2">
+          {
+            retreat.included.map((item, i) => (
+              <div
+                class="rounded-2xl border border-primary/20 bg-background p-5 transition-transform duration-300 hover:-translate-y-1"
+                data-reveal={i % 2 === 0 ? "left" : "right"}
+                style={`--reveal-delay: ${i * 0.06}s`}
+              >
+                <div class="flex items-start gap-3">
+                  <Icon name="check" class="mt-1 size-4 shrink-0 text-primary" />
+                  <div>
+                    <p class="font-semibold text-primary">{item.t}</p>
+                    <p class="mt-1 text-sm text-foreground/75">{item.d}</p>
+                  </div>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+
+        <div class="mt-12 grid gap-6 md:grid-cols-3">
+          {
+            retreat.gallery.map((shot, i) => (
+              <div
+                class="group overflow-hidden rounded-2xl shadow-lg"
+                data-reveal="up"
+                style={`--reveal-delay: ${i * 0.12}s`}
+              >
+                <img
+                  src={shot.src}
+                  alt={shot.alt}
+                  loading="lazy"
+                  decoding="async"
+                  class="aspect-square w-full object-cover transition-transform duration-700 group-hover:scale-[1.1]"
+                />
+              </div>
+            ))
+          }
+        </div>
+
+        <BookingCard
+          price={retreat.price}
+          spotsLeft={retreat.spotsLeft}
+          totalSpots={retreat.totalSpots}
+        />
+      </div>
+    </section>
+
+    <footer class="px-6 py-16 text-center md:px-12">
+      <p class="mt-6 text-sm uppercase tracking-[0.3em] text-primary">
+        {site.name}
+      </p>
+      <p class="mt-2 text-sm text-foreground/70">
+        {site.email} · {site.phone}
+      </p>
+      <a
+        href="/"
+        class="mt-6 inline-block text-xs uppercase tracking-[0.25em] text-primary hover:opacity-60"
+      >
+        ← Back to home
+      </a>
+    </footer>
+  </main>
+</Base>

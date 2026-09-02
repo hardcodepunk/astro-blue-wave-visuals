@@ -1,0 +1,41 @@
+---
+import { media } from "~/data/site";
+---
+
+<section id="about" class="relative px-6 py-28 md:py-40">
+  <div class="mx-auto grid max-w-6xl gap-12 md:grid-cols-2 md:items-center">
+    <div class="relative" data-reveal="left">
+      <div
+        class="relative overflow-hidden rounded-md border-4 border-background shadow-xl"
+      >
+        <img
+          src={media.ewoud}
+          alt="Ewoud with camera"
+          class="w-full"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+    </div>
+
+    <div>
+      <p class="mb-4 text-xs uppercase tracking-[0.3em] text-primary">
+        — About Us
+      </p>
+      <h2 class="text-4xl leading-[1.05] text-primary md:text-6xl">Ewoud</h2>
+
+      <p class="mt-8 text-lg leading-relaxed text-foreground/80">
+        Bluewave Visuals was founded by <strong class="text-primary"
+          >Ewoud Vansteenkiste</strong
+        >. We create photography and film rooted in movement, light, and
+        emotion.
+      </p>
+      <p class="mt-4 text-lg leading-relaxed text-foreground/80">
+        Our background is shaped by years spent in the water, traveling, and
+        surf culture, combined with Ewoud's visual arts education at SVA NYC. We
+        don't just document what happens we try to capture how it <em>feels</em
+        >.
+      </p>
+    </div>
+  </div>
+</section>

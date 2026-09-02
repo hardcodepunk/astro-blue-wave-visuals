@@ -1,0 +1,56 @@
+---
+import GalleryLightbox from "./GalleryLightbox";
+
+interface Props {
+  images: string[];
+  label: string;
+}
+
+const { images, label } = Astro.props;
+---
+
+<section class="px-3 pb-20 md:px-6">
+  <div
+    class="columns-1 gap-3 sm:columns-2 md:columns-3 md:gap-4 lg:columns-4"
+    data-gallery
+  >
+    {
+      images.map((src, i) => (
+        <button
+          type="button"
+          class="group mb-3 block w-full break-inside-avoid overflow-hidden md:mb-4"
+          data-index={i}
+          data-reveal="up"
+          style={`--reveal-delay: ${(i % 4) * 0.05}s`}
+        >
+          <img
+            src={src}
+            alt={`${label} ${i + 1}`}
+            loading="lazy"
+            decoding="async"
+            class="h-auto w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+          />
+        </button>
+      ))
+    }
+  </div>
+</section>
+
+<GalleryLightbox images={images} label={label} client:idle />
+
+<script>
+  import { OPEN_IMAGE_EVENT } from "./GalleryLightbox";
+
+  document
+    .querySelector("[data-gallery]")
+    ?.addEventListener("click", (event) => {
+      const tile = (event.target as HTMLElement).closest<HTMLElement>(
+        "[data-index]",
+      );
+      if (!tile) return;
+
+      window.dispatchEvent(
+        new CustomEvent(OPEN_IMAGE_EVENT, { detail: Number(tile.dataset.index) }),
+      );
+    });
+</script>

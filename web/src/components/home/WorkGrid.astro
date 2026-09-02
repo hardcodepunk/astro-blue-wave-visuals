@@ -1,0 +1,115 @@
+---
+import ProjectModal from "../ProjectModal";
+import { projects } from "~/data/site";
+---
+
+<section id="work" class="relative px-6 py-28 md:py-36">
+  <div class="mx-auto max-w-7xl">
+    <div class="mb-12 flex flex-wrap items-end justify-between gap-6">
+      <div>
+        <p class="mb-4 text-xs uppercase tracking-[0.3em] text-primary">
+          — Selected Work
+        </p>
+        <h2 class="text-4xl leading-[1.05] text-primary md:text-7xl">
+          Film &amp; Stills,<br />one current.
+        </h2>
+      </div>
+      <p class="max-w-md text-foreground/70">
+        Tap any tile to open the project — videos play in their native 16:9,
+        photo series open in a fullscreen slider.
+      </p>
+    </div>
+
+    <div
+      class="columns-1 gap-6 [column-fill:_balance] sm:columns-2 md:columns-3 md:gap-10 lg:columns-4"
+      data-work
+    >
+      {
+        projects.map((project, i) => {
+          const Tag = project.href ? "a" : "button";
+          const tagProps = project.href
+            ? { href: project.href }
+            : { type: "button" as const, "data-project": project.id };
+
+          return (
+            <Tag
+              {...tagProps}
+              class="group mb-8 block w-full break-inside-avoid text-left md:mb-12"
+              data-reveal="up"
+              style={`--reveal-delay: ${(i % 4) * 0.06}s`}
+            >
+              <div
+                class:list={[
+                  "relative w-full overflow-hidden",
+                  project.aspect,
+                ]}
+              >
+                {project.videoSrc ? (
+                  <video
+                    src={project.videoSrc}
+                    poster={project.type === "video" ? project.src : undefined}
+                    muted
+                    loop
+                    playsinline
+                    preload="metadata"
+                    class="size-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                  />
+                ) : (
+                  <img
+                    src={project.src}
+                    alt={project.title}
+                    loading="lazy"
+                    decoding="async"
+                    class="size-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                  />
+                )}
+              </div>
+
+              <div class="mt-4">
+                <p class="text-[10px] uppercase tracking-[0.28em] text-primary/70">
+                  {project.category.split("·").pop()?.trim()}
+                </p>
+                <h3 class="mt-2 font-serif text-xl text-primary md:text-2xl">
+                  {project.title}
+                </h3>
+              </div>
+            </Tag>
+          );
+        })
+      }
+    </div>
+  </div>
+</section>
+
+<ProjectModal projects={projects} client:idle />
+
+<script>
+  import { OPEN_PROJECT_EVENT } from "../ProjectModal";
+
+  const grid = document.querySelector("[data-work]");
+
+  grid?.addEventListener("click", (event) => {
+    const tile = (event.target as HTMLElement).closest<HTMLElement>(
+      "[data-project]",
+    );
+    if (!tile) return;
+
+    window.dispatchEvent(
+      new CustomEvent(OPEN_PROJECT_EVENT, { detail: tile.dataset.project }),
+    );
+  });
+
+  // Video tiles preview themselves on hover and rewind when the pointer leaves.
+  grid?.querySelectorAll("video").forEach((video) => {
+    const tile = video.closest("a, button");
+
+    tile?.addEventListener("mouseenter", () => {
+      void video.play().catch(() => {});
+    });
+
+    tile?.addEventListener("mouseleave", () => {
+      video.pause();
+      video.currentTime = 0;
+    });
+  });
+</script>

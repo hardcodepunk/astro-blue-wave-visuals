@@ -1,0 +1,68 @@
+---
+import Icon from "./Icon.astro";
+import { site } from "~/data/site";
+
+interface Props {
+  price: string;
+  spotsLeft: number;
+  totalSpots: number;
+}
+
+const { price, spotsLeft, totalSpots } = Astro.props;
+
+const taken = totalSpots - spotsLeft;
+const filled = (taken / totalSpots) * 100;
+---
+
+<div
+  class="mt-10 rounded-3xl border-2 border-primary/30 bg-background p-6 shadow-sm md:p-8"
+  data-reveal="scale"
+>
+  <p class="text-sm uppercase tracking-[0.25em] text-primary/70">
+    Book your spot
+  </p>
+
+  <p class="mt-4 text-4xl leading-tight text-primary md:text-6xl">
+    Only <span class="italic">{spotsLeft}</span> of
+    <span class="italic">{totalSpots}</span> spots left
+  </p>
+
+  <div class="mt-4 h-3 w-full overflow-hidden rounded-full bg-primary/10">
+    <div
+      class="h-full rounded-full bg-primary transition-[width] duration-[1200ms] ease-out"
+      style={`width: ${filled}%`}
+      role="progressbar"
+      aria-valuenow={taken}
+      aria-valuemin="0"
+      aria-valuemax={totalSpots}
+      aria-label={`${taken} of ${totalSpots} spots taken`}
+    >
+    </div>
+  </div>
+
+  <p class="mt-2 text-xs text-foreground/60">
+    {taken} of {totalSpots} spots already taken
+  </p>
+
+  <p class="mt-5 text-sm text-foreground/70">
+    Just <span class="font-semibold text-primary">{price}</span> — excl. flight ·
+    0 hidden fees · 0 stress. Secure your spot by transferring the first half.
+  </p>
+
+  <div class="mt-6 flex flex-wrap gap-3">
+    <a
+      href={`mailto:${site.email}`}
+      class="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-3 text-xs uppercase tracking-[0.2em] text-primary-foreground transition hover:-translate-y-0.5 hover:bg-primary-deep"
+    >
+      <Icon name="mail" class="size-3.5" /> Email Us
+    </a>
+    <a
+      href={site.whatsapp}
+      target="_blank"
+      rel="noreferrer"
+      class="inline-flex items-center gap-2 rounded-full border-2 border-primary px-5 py-3 text-xs uppercase tracking-[0.2em] text-primary transition hover:-translate-y-0.5 hover:bg-primary hover:text-primary-foreground"
+    >
+      <Icon name="message-circle" class="size-3.5" /> WhatsApp Us
+    </a>
+  </div>
+</div>

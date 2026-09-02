@@ -1,32 +1,78 @@
 ---
-const { title = "Bluewave Visuals", description = "Cinematic storytelling through sea, light, and motion." } =
-  Astro.props
-import "../styles/globals.css"
-import StickyHeader from "../components/StickyHeader.astro"
-import SiteFooter from "../components/SiteFooter.astro"
+import { site } from "~/data/site";
+import "~/styles/globals.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Grain is used on the marketing pages, not on the bare gallery walls. */
+  grain?: boolean;
+}
+
+const {
+  title = site.title,
+  description = site.description,
+  grain = true,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
 ---
 
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/logo.svg" type="image/svg+xml" />
+    <link rel="canonical" href={canonical} />
+
     <title>{title}</title>
+    <meta name="description" content={description} />
+
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Andada+Pro:ital,wght@0,400;0,500;0,600;1,400&display=swap"
       rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Inter:wght@300;400;500;600;700&display=swap"
     />
-    <meta name="description" content={description} />
+
+    <meta name="generator" content={Astro.generator} />
   </head>
 
-  <body class="font-sans min-h-screen flex flex-col bg-paper text-ocean">
-    <StickyHeader />
+  <body class={grain ? "paper-grain" : undefined}>
+    <slot />
 
-    <main class="flex-1">
-      <slot />
-    </main>
+    <script>
+      // Reveals every [data-reveal] element once, the first time it clears
+      // the viewport edge — the static-HTML equivalent of the original's
+      // per-element `whileInView` animations.
+      const reveal = (el: Element) => el.classList.add("is-visible");
+      const targets = document.querySelectorAll("[data-reveal]");
 
-    <SiteFooter />
+      if (!("IntersectionObserver" in window)) {
+        targets.forEach(reveal);
+      } else {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (!entry.isIntersecting) continue;
+              reveal(entry.target);
+              observer.unobserve(entry.target);
+            }
+          },
+          { rootMargin: "0px 0px -60px 0px", threshold: 0.01 },
+        );
+
+        targets.forEach((el) => observer.observe(el));
+      }
+    </script>
   </body>
 </html>

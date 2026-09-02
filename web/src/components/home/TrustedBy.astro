@@ -1,0 +1,28 @@
+---
+import { clients } from "~/data/site";
+
+// The list is rendered twice so the -50% keyframe loops seamlessly.
+const track = [...clients, ...clients];
+---
+
+<section class="overflow-hidden border-y border-primary/20 bg-secondary py-14">
+  <p class="mb-8 text-center text-xs uppercase tracking-[0.3em] text-primary">
+    — Trusted by
+  </p>
+
+  <div
+    class="relative flex w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]"
+  >
+    <div class="flex shrink-0 animate-marquee" aria-hidden="true">
+      {
+        track.map((client) => (
+          <span class="mx-8 whitespace-nowrap font-serif text-2xl text-primary md:text-4xl">
+            {client}
+          </span>
+        ))
+      }
+    </div>
+  </div>
+
+  <p class="sr-only">Clients: {clients.join(", ")}.</p>
+</section>

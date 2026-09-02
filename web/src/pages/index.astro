@@ -1,69 +1,44 @@
 ---
-import Base from "../layouts/Base.astro"
-import VideoHero from "../components/VideoHero.tsx"
-import BioWithPreview from "../components/BioWithPreview.astro"
-import ServicesSection from "../components/ServicesSection.astro"
-import WorkCanvas from "../components/WorkCanvas.astro"
-import TrustedBy from "../components/TrustedBy.astro"
-import ProcessSection from "../components/ProcessSection.astro"
-import ContactSection from "../components/ContactSection.astro"
-import { sanity } from "../lib/sanity"
-
-type SiteSettings = {
-  title?: string
-  description?: string
-  heroTitle?: string
-  heroSubtitle?: string
-  heroMp4?: string
-  heroWebm?: string
-  heroPoster?: string
-  showreelUrl?: string
-} | null
-
-const settings = await sanity.fetch<SiteSettings>(`
-  *[_type == "siteSettings" && _id == "siteSettings"][0]{
-    title,
-    description,
-    heroTitle,
-    heroSubtitle,
-    heroMp4,
-    heroWebm,
-    heroPoster,
-    showreelUrl
-  }
-`)
-
-const siteTitle = settings?.title ?? "Blue Wave Visuals"
-const siteDescription = settings?.description ?? "Creative visual storytelling for brands, events, and businesses."
-
-const heroTitle = settings?.heroTitle ?? "Blue Wave Visuals"
-const heroSubtitle = settings?.heroSubtitle ?? ""
-const heroMp4 = settings?.heroMp4 ?? undefined
-const heroWebm = settings?.heroWebm ?? undefined
-const heroPoster = settings?.heroPoster ?? undefined
-const showreelUrl = settings?.showreelUrl ?? undefined
+import Nav from "~/components/Nav.astro";
+import WaveDivider from "~/components/WaveDivider.astro";
+import About from "~/components/home/About.astro";
+import Contact from "~/components/home/Contact.astro";
+import Hero from "~/components/home/Hero.astro";
+import Philosophy from "~/components/home/Philosophy.astro";
+import QuoteBand from "~/components/home/QuoteBand.astro";
+import Services from "~/components/home/Services.astro";
+import SiteFooter from "~/components/home/SiteFooter.astro";
+import TrustedBy from "~/components/home/TrustedBy.astro";
+import WorkGrid from "~/components/home/WorkGrid.astro";
+import Base from "~/layouts/Base.astro";
 ---
 
-<Base title={siteTitle} description={siteDescription}>
-  <VideoHero
-    webm={heroWebm}
-    mp4={heroMp4}
-    poster={heroPoster}
-    title={heroTitle}
-    subtitle={heroSubtitle}
-    showreelUrl={showreelUrl}
-    client:load
-  />
+<Base>
+  <main class="relative overflow-x-hidden bg-background text-foreground">
+    <Nav variant="home" />
 
-  <BioWithPreview />
+    <Hero />
+    <WaveDivider />
 
-  <ServicesSection />
+    <Philosophy />
+    <WaveDivider />
 
-  <WorkCanvas />
+    <About />
+    <WaveDivider />
 
-  <ProcessSection />
+    <Services />
+    <WaveDivider />
 
-  <TrustedBy />
+    <WorkGrid />
 
-  <ContactSection />
+    <TrustedBy />
+    <WaveDivider />
+
+    <QuoteBand />
+    <WaveDivider />
+
+    <Contact />
+
+    <SiteFooter />
+  </main>
 </Base>

@@ -1,0 +1,35 @@
+---
+import Icon from "../Icon.astro";
+import { services } from "~/data/site";
+---
+
+<section class="relative bg-primary text-primary-foreground">
+  <div class="mx-auto max-w-6xl px-6 py-28 md:py-36">
+    <p class="mb-4 text-xs uppercase tracking-[0.3em] opacity-70">
+      — What we offer
+    </p>
+    <h2 class="mb-16 text-4xl leading-[1.05] md:text-6xl">
+      Services, shaped by the sea.
+    </h2>
+
+    <div
+      class="grid grid-cols-2 gap-px overflow-hidden rounded-lg bg-primary-foreground/20 md:grid-cols-3"
+    >
+      {
+        services.map((service) => (
+          <div class="group flex flex-col items-start gap-6 bg-primary p-8 transition hover:bg-primary-deep md:p-10">
+            <Icon
+              name={service.icon}
+              class="size-8 transition-transform group-hover:-rotate-6 group-hover:scale-110"
+              strokeWidth={1.4}
+            />
+            <div>
+              <h3 class="font-serif text-2xl">{service.name}</h3>
+              <p class="mt-2 text-sm opacity-70">{service.description}</p>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

@@ -1,0 +1,159 @@
+---
+import { site } from "~/data/site";
+import Icon from "./Icon.astro";
+
+interface Props {
+  /** `home` and `trips` share the fixed bar; `gallery` is the stripped-back
+   *  sticky bar used on the dedicated photo walls. */
+  variant?: "home" | "trips" | "gallery";
+}
+
+const { variant = "home" } = Astro.props;
+
+const links =
+  variant === "trips"
+    ? [
+        { label: "Home", href: "/" },
+        { label: "Work", href: "/#work" },
+        { label: "Surftrips", href: "/surftrips", current: true },
+      ]
+    : [
+        { label: "Home", href: "/" },
+        { label: "Work", href: "/#work" },
+        { label: "Philosophy", href: "/#philosophy" },
+        { label: "About", href: "/#about" },
+        { label: "Surftrips", href: "/surftrips" },
+      ];
+
+const mobileLinks =
+  variant === "trips"
+    ? [
+        { label: "Home", href: "/" },
+        { label: "Work", href: "/#work" },
+        { label: "Surftrips", href: "/surftrips" },
+      ]
+    : [
+        { label: "About", href: "/#about" },
+        { label: "Philosophy", href: "/#philosophy" },
+        { label: "Surftrips", href: "/surftrips" },
+        { label: "Work", href: "/#work" },
+        { label: "Projects", href: "/#work" },
+      ];
+
+const logoSize =
+  variant === "gallery"
+    ? "h-10 md:h-12"
+    : variant === "trips"
+      ? "h-7 md:h-8"
+      : "h-10 md:h-14";
+---
+
+{
+  variant === "gallery" ? (
+    <nav class="sticky top-0 z-40 flex items-center justify-between bg-background/80 px-6 py-4 backdrop-blur md:px-10">
+      <a href="/" class="flex items-center gap-2">
+        <img src="/logo.svg" alt={site.name} class={`${logoSize} w-auto`} />
+      </a>
+      <a
+        href="/#work"
+        class="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-primary transition hover:opacity-60"
+      >
+        <Icon name="arrow-left" class="size-3.5" /> Back to Projects
+      </a>
+    </nav>
+  ) : (
+    <nav
+      class="fixed inset-x-0 top-0 z-40 flex items-center justify-between bg-background/70 px-6 py-4 backdrop-blur md:px-12"
+      data-nav
+    >
+      <a href="/" class="flex items-center gap-2">
+        <img src="/logo.svg" alt={site.name} class={`${logoSize} w-auto`} />
+      </a>
+
+      <div class="hidden gap-8 text-sm uppercase tracking-[0.18em] text-primary md:flex">
+        {links.map((link) => (
+          <a
+            href={link.href}
+            class:list={[
+              "transition hover:opacity-60",
+              link.current && "font-semibold",
+            ]}
+          >
+            {link.label}
+          </a>
+        ))}
+      </div>
+
+      <a
+        href={`mailto:${site.email}`}
+        class="hidden items-center gap-2 rounded-full bg-primary px-4 py-2 text-xs uppercase tracking-[0.18em] text-primary-foreground transition hover:bg-primary-deep md:inline-flex"
+      >
+        <Icon name="mail" class="size-3.5" /> Get in touch
+      </a>
+
+      <button
+        type="button"
+        class="inline-flex items-center justify-center p-2 text-primary md:hidden"
+        aria-label="Toggle menu"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        data-menu-toggle
+      >
+        <Icon name="menu" class="size-6" data-menu-open />
+        <Icon name="x" class="hidden size-6" data-menu-close />
+      </button>
+
+      <div
+        id="mobile-menu"
+        class="absolute right-4 top-full z-50 mt-2 hidden w-44 rounded-md bg-[#F6F4EB] px-4 py-3 shadow-lg md:hidden"
+        data-menu-panel
+      >
+        <div class="flex flex-col gap-1">
+          {mobileLinks.map((link) => (
+            <a
+              href={link.href}
+              class="py-1 text-[11px] uppercase leading-tight tracking-[0.18em] text-[#1E73BE] transition hover:opacity-70"
+            >
+              {link.label}
+            </a>
+          ))}
+        </div>
+      </div>
+    </nav>
+  )
+}
+
+<script>
+  const nav = document.querySelector("[data-nav]");
+
+  if (nav) {
+    const toggle = nav.querySelector<HTMLButtonElement>("[data-menu-toggle]");
+    const panel = nav.querySelector<HTMLElement>("[data-menu-panel]");
+    const openIcon = nav.querySelector<SVGElement>("[data-menu-open]");
+    const closeIcon = nav.querySelector<SVGElement>("[data-menu-close]");
+
+    const setOpen = (open: boolean) => {
+      panel?.classList.toggle("hidden", !open);
+      openIcon?.classList.toggle("hidden", open);
+      closeIcon?.classList.toggle("hidden", !open);
+      toggle?.setAttribute("aria-expanded", String(open));
+    };
+
+    toggle?.addEventListener("click", () => {
+      setOpen(panel?.classList.contains("hidden") ?? false);
+    });
+
+    // Tapping a destination, or anywhere outside the sheet, closes it.
+    panel?.addEventListener("click", (event) => {
+      if ((event.target as HTMLElement).closest("a")) setOpen(false);
+    });
+
+    document.addEventListener("click", (event) => {
+      if (!nav.contains(event.target as Node)) setOpen(false);
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") setOpen(false);
+    });
+  }
+</script>

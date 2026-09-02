@@ -1,0 +1,44 @@
+---
+/**
+ * Two hand-drawn swell lines that draw themselves in as the divider
+ * scrolls into view. Purely decorative.
+ */
+interface Props {
+  class?: string;
+}
+
+const { class: className = "" } = Astro.props;
+
+const crest = (y: number) =>
+  `M0 ${y} Q 100 ${y - 30}, 200 ${y} T 400 ${y} T 600 ${y} T 800 ${y} T 1000 ${y} T 1200 ${y} T 1400 ${y} T 1600 ${y}`;
+---
+
+<div
+  class={`relative overflow-hidden w-full h-16 text-primary ${className}`}
+  aria-hidden="true"
+  data-reveal="none"
+>
+  <svg
+    class="absolute inset-0 w-full h-full"
+    viewBox="0 0 1600 80"
+    preserveAspectRatio="none"
+  >
+    <path
+      class="wave-path"
+      style="--wave-len: 1700"
+      d={crest(40)}
+      stroke="currentColor"
+      stroke-width="2"
+      fill="none"
+    />
+    <path
+      class="wave-path"
+      style="--wave-len: 1700; --wave-delay: 0.15s"
+      d={crest(55)}
+      stroke="currentColor"
+      stroke-opacity="0.4"
+      stroke-width="1.5"
+      fill="none"
+    />
+  </svg>
+</div>

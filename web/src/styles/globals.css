@@ -1,27 +1,137 @@
 @import "tailwindcss";
 
-:root {
-  --paper: 255 234 207; /* #FFEACF */
-  --ocean: 26 110 178;  /* #1A6EB2 */
-}
-
+/* ---------------------------------------------------------------
+   Design tokens — sun-bleached paper background, deep ocean blue ink
+   --------------------------------------------------------------- */
 @theme {
-  --color-paper: rgb(var(--paper));
-  --color-ocean: rgb(var(--ocean));
-  --color-black: #000000;
-  --font-sans: "Andada Pro", serif;
-  --font-display: "Nighty", sans-serif;
+  --color-background: oklch(96.5% 0.018 88);
+  --color-foreground: oklch(38% 0.13 248);
+
+  --color-card: oklch(97.5% 0.012 88);
+  --color-card-foreground: oklch(38% 0.13 248);
+
+  --color-primary: oklch(48% 0.15 248);
+  --color-primary-foreground: oklch(97.5% 0.018 88);
+  --color-primary-deep: oklch(32% 0.13 250);
+
+  --color-secondary: oklch(92% 0.025 85);
+  --color-secondary-foreground: oklch(38% 0.13 248);
+
+  --color-muted: oklch(93% 0.022 85);
+  --color-muted-foreground: oklch(48% 0.06 250);
+
+  --color-accent: oklch(48% 0.15 248);
+  --color-accent-foreground: oklch(97.5% 0.018 88);
+
+  --color-ink: oklch(28% 0.05 60);
+  --color-border: oklch(85% 0.03 85);
+  --color-input: oklch(88% 0.025 85);
+  --color-ring: oklch(48% 0.15 248);
+
+  --radius: 0.5rem;
+
+  --font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
+  --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+
+  --animate-marquee: marquee 40s linear infinite;
 }
 
-@font-face {
-  font-family: "Nighty";
-  src: url("/font/Nighty.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }
 
-html,
-body {
-  @apply antialiased bg-paper text-ocean;
+@layer base {
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Display face for headings — matches the original cascade, where the
+     element rule is overridden by an explicit `font-serif` utility. */
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: Caprasimo, "DM Serif Display", Georgia, serif;
+    letter-spacing: -0.01em;
+  }
+}
+
+/* Fine paper tooth laid over the whole page. */
+@utility paper-grain {
+  background-image: radial-gradient(#765e440f 1px, #0000 1px),
+    radial-gradient(#765e440a 1px, #0000 1px);
+  background-position: 0 0, 1px 2px;
+  background-size: 3px 3px, 7px 7px;
+}
+
+/* ---------------------------------------------------------------
+   Scroll reveal — the Astro-native stand-in for the original's
+   per-element `whileInView` motion props. Driven by an
+   IntersectionObserver in Base.astro.
+   --------------------------------------------------------------- */
+[data-reveal] {
+  opacity: 0;
+  transition:
+    opacity 0.7s ease-out var(--reveal-delay, 0s),
+    transform 0.7s ease-out var(--reveal-delay, 0s);
+  will-change: opacity, transform;
+}
+
+[data-reveal="up"] {
+  transform: translateY(30px);
+}
+[data-reveal="left"] {
+  transform: translateX(-30px);
+}
+[data-reveal="right"] {
+  transform: translateX(30px);
+}
+[data-reveal="scale"] {
+  transform: translateY(40px) scale(0.97);
+}
+
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* The wave rules draw themselves in as they enter the viewport. */
+.wave-path {
+  stroke-dasharray: var(--wave-len, 2000);
+  stroke-dashoffset: var(--wave-len, 2000);
+  transition: stroke-dashoffset 1.6s ease-in-out var(--wave-delay, 0s),
+    opacity 0.6s ease-out var(--wave-delay, 0s);
+  opacity: 0;
+}
+
+.is-visible .wave-path {
+  stroke-dashoffset: 0;
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal],
+  [data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .wave-path {
+    stroke-dashoffset: 0;
+    opacity: 1;
+    transition: none;
+  }
+
+  .animate-marquee {
+    animation: none;
+  }
 }

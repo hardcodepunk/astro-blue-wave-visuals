@@ -1,0 +1,41 @@
+---
+import Icon from "../Icon.astro";
+import { media } from "~/data/site";
+---
+
+<section
+  id="top"
+  class="relative isolate flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 text-center"
+>
+  <div class="absolute inset-0 z-0">
+    <video
+      src={media.heroVideo}
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="auto"
+      class="size-full object-cover"
+    ></video>
+  </div>
+
+  <div
+    class="relative z-10 max-w-4xl text-[#fce8c8] [text-shadow:_0_2px_18px_rgb(0_0_0_/_45%)]"
+    data-reveal="up"
+  >
+    <p class="mx-auto max-w-2xl text-balance text-lg italic md:text-2xl">
+      &ldquo;Life feels different when the ocean becomes your reference
+      point.&rdquo;
+    </p>
+
+    <div class="mt-12 flex justify-center">
+      <a
+        href="#philosophy"
+        class="group inline-flex flex-col items-center gap-2 text-xs uppercase tracking-[0.3em]"
+      >
+        <span>Scroll</span>
+        <Icon name="arrow-down" class="size-4 animate-bounce" />
+      </a>
+    </div>
+  </div>
+</section>
