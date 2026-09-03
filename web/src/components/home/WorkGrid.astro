@@ -1,6 +1,11 @@
 ---
-import ProjectModal from "../ProjectModal";
+import { Picture } from "astro:assets";
 import { projects } from "~/data/site";
+import { getImage } from "~/lib/images";
+
+// Everything except the two galleries that navigate to their own page opens
+// in the dialog below.
+const openable = projects.filter((p) => p.kind !== "gallery-link");
 ---
 
 <section id="work" class="relative px-6 py-28 md:py-36">
@@ -26,40 +31,28 @@ import { projects } from "~/data/site";
     >
       {
         projects.map((project, i) => {
-          const Tag = project.href ? "a" : "button";
-          const tagProps = project.href
-            ? { href: project.href }
-            : { type: "button" as const, "data-project": project.id };
-
-          return (
-            <Tag
-              {...tagProps}
-              class="group mb-8 block w-full break-inside-avoid text-left md:mb-12"
-              data-reveal="up"
-              style={`--reveal-delay: ${(i % 4) * 0.06}s`}
-            >
-              <div
-                class:list={[
-                  "relative w-full overflow-hidden",
-                  project.aspect,
-                ]}
-              >
-                {project.videoSrc ? (
+          const inner = (
+            <>
+              <div class:list={["relative w-full overflow-hidden", project.aspect]}>
+                {project.kind === "video" ? (
                   <video
                     src={project.videoSrc}
-                    poster={project.type === "video" ? project.src : undefined}
+                    poster={project.poster}
                     muted
                     loop
                     playsinline
-                    preload="metadata"
+                    preload="none"
                     class="size-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                   />
                 ) : (
-                  <img
-                    src={project.src}
+                  <Picture
+                    src={getImage(project.cover)}
                     alt={project.title}
+                    widths={[320, 480, 720]}
+                    sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
+                    formats={["avif", "webp"]}
+                      fallbackFormat="jpg"
                     loading="lazy"
-                    decoding="async"
                     class="size-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                   />
                 )}
@@ -73,7 +66,29 @@ import { projects } from "~/data/site";
                   {project.title}
                 </h3>
               </div>
-            </Tag>
+            </>
+          );
+
+          const shared = {
+            class:
+              "group mb-8 block w-full break-inside-avoid text-left md:mb-12",
+            "data-reveal": "up",
+            style: `--reveal-delay: ${(i % 4) * 0.06}s`,
+          };
+
+          return project.kind === "gallery-link" ? (
+            <a href={project.href} {...shared}>
+              {inner}
+            </a>
+          ) : (
+            <button
+              type="button"
+              data-open={project.id}
+              aria-label={`Open ${project.title}`}
+              {...shared}
+            >
+              {inner}
+            </button>
           );
         })
       }
@@ -81,35 +96,171 @@ import { projects } from "~/data/site";
   </div>
 </section>
 
-<ProjectModal projects={projects} client:idle />
+<dialog
+  class="m-0 h-full max-h-none w-full max-w-none bg-transparent p-4 backdrop:bg-primary-deep/70 backdrop:backdrop-blur-md md:p-10"
+  aria-label="Project viewer"
+  data-project-dialog
+>
+  <div class="flex h-full items-center justify-center">
+    <div
+      class="relative w-full max-w-5xl overflow-hidden rounded-2xl bg-background shadow-2xl"
+    >
+      <button
+        type="button"
+        aria-label="Close"
+        class="absolute right-4 top-4 z-20 rounded-full bg-background/80 p-2 text-primary shadow hover:bg-background"
+        data-close
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="size-5" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+      </button>
+
+      {
+        openable.map((project) => (
+          <div class="grid md:grid-cols-[1.6fr_1fr]" data-panel={project.id} hidden>
+            <div class="relative bg-primary-deep">
+              {project.kind === "video" ? (
+                <video
+                  src={project.videoSrc}
+                  poster={project.poster}
+                  controls
+                  playsinline
+                  preload="none"
+                  class="h-[40vh] w-full bg-black object-contain md:h-[70vh]"
+                />
+              ) : (
+                <>
+                  {project.images.map((src, s) => (
+                    <div data-slide={s} hidden={s > 0}>
+                      <Picture
+                      src={getImage(src)}
+                      alt={`${project.title} ${s + 1}`}
+                      widths={[720, 1200]}
+                      sizes="(min-width: 768px) 60vw, 100vw"
+                      formats={["avif", "webp"]}
+                      fallbackFormat="jpg"
+                      loading="lazy"
+                      class="h-[40vh] w-full bg-primary-deep object-contain md:h-[70vh]"
+                      />
+                    </div>
+                  ))}
+
+                  <button
+                    type="button"
+                    aria-label="Previous"
+                    class="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-background/80 p-2 text-primary shadow hover:bg-background"
+                    data-prev
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="size-5" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg>
+                  </button>
+                  <button
+                    type="button"
+                    aria-label="Next"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-background/80 p-2 text-primary shadow hover:bg-background"
+                    data-next
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="size-5" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
+                  </button>
+                  <p
+                    class="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-background/80 px-3 py-1 text-[10px] uppercase tracking-[0.25em] text-primary"
+                    aria-live="polite"
+                    data-counter
+                  >
+                    1 / {project.images.length}
+                  </p>
+                </>
+              )}
+            </div>
+
+            <div class="flex flex-col gap-4 p-6 md:p-8">
+              <span class="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                {project.category}
+              </span>
+              <h3 class="text-3xl text-primary md:text-4xl">{project.title}</h3>
+              <p class="text-sm leading-relaxed text-foreground/80">
+                {project.description}
+              </p>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</dialog>
 
 <script>
-  import { OPEN_PROJECT_EVENT } from "../ProjectModal";
-
+  const dialog = document.querySelector<HTMLDialogElement>("[data-project-dialog]");
   const grid = document.querySelector("[data-work]");
+  if (dialog && grid) {
+    const panels = [...dialog.querySelectorAll<HTMLElement>("[data-panel]")];
 
-  grid?.addEventListener("click", (event) => {
-    const tile = (event.target as HTMLElement).closest<HTMLElement>(
-      "[data-project]",
-    );
-    if (!tile) return;
+    const slidesIn = (panel: HTMLElement) =>
+      [...panel.querySelectorAll<HTMLElement>("[data-slide]")];
 
-    window.dispatchEvent(
-      new CustomEvent(OPEN_PROJECT_EVENT, { detail: tile.dataset.project }),
-    );
-  });
+    const showSlide = (panel: HTMLElement, next: number) => {
+      const slides = slidesIn(panel);
+      if (!slides.length) return;
+      const index = (next + slides.length) % slides.length;
+      slides.forEach((slide, i) => (slide.hidden = i !== index));
+      const counter = panel.querySelector("[data-counter]");
+      if (counter) counter.textContent = `${index + 1} / ${slides.length}`;
+    };
 
-  // Video tiles preview themselves on hover and rewind when the pointer leaves.
-  grid?.querySelectorAll("video").forEach((video) => {
-    const tile = video.closest("a, button");
+    const activeIndex = (panel: HTMLElement) =>
+      slidesIn(panel).findIndex((slide) => !slide.hidden);
 
-    tile?.addEventListener("mouseenter", () => {
-      void video.play().catch(() => {});
+    const stopMedia = () =>
+      dialog.querySelectorAll("video").forEach((video) => video.pause());
+
+    grid.addEventListener("click", (event) => {
+      const trigger = (event.target as HTMLElement).closest<HTMLElement>("[data-open]");
+      if (!trigger) return;
+
+      const id = trigger.dataset.open;
+      panels.forEach((panel) => {
+        const match = panel.dataset.panel === id;
+        panel.hidden = !match;
+        if (match) showSlide(panel, 0);
+      });
+
+      // showModal() brings the focus trap, Escape handling and inert
+      // background that the old React overlay had to hand-roll — and didn't.
+      dialog.showModal();
     });
 
-    tile?.addEventListener("mouseleave", () => {
-      video.pause();
-      video.currentTime = 0;
+    dialog.addEventListener("click", (event) => {
+      const target = event.target as HTMLElement;
+
+      if (target.closest("[data-close]") || target === dialog) {
+        dialog.close();
+        return;
+      }
+
+      const panel = target.closest<HTMLElement>("[data-panel]");
+      if (!panel) return;
+
+      if (target.closest("[data-next]")) showSlide(panel, activeIndex(panel) + 1);
+      if (target.closest("[data-prev]")) showSlide(panel, activeIndex(panel) - 1);
     });
-  });
+
+    dialog.addEventListener("keydown", (event) => {
+      const panel = panels.find((p) => !p.hidden);
+      if (!panel || !slidesIn(panel).length) return;
+      if (event.key === "ArrowRight") showSlide(panel, activeIndex(panel) + 1);
+      if (event.key === "ArrowLeft") showSlide(panel, activeIndex(panel) - 1);
+    });
+
+    // Fires for Escape too, so this is the single place media gets stopped.
+    dialog.addEventListener("close", stopMedia);
+
+    // Tile videos preview on hover; preload="none" means nothing is fetched
+    // until the pointer actually lands on one.
+    grid.querySelectorAll("video").forEach((video) => {
+      const tile = video.closest("a, button");
+      tile?.addEventListener("mouseenter", () => void video.play().catch(() => {}));
+      tile?.addEventListener("mouseleave", () => {
+        video.pause();
+        video.currentTime = 0;
+      });
+    });
+  }
 </script>

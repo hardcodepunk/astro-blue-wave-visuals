@@ -2,19 +2,23 @@
 #
 # Restores web/public/media from the original site.
 #
-# The video files are ~400MB and two of them are over GitHub's 100MB per-file
-# limit, so they are gitignored rather than committed. Run this after a fresh
-# clone to pull them back down. Images are in the repo already; this script
-# re-fetches them too and is safe to re-run — existing files are skipped.
+# Photography lives in web/src/assets/media and is committed. The camera-original
+# video is ~400MB with two files over GitHub's 100MB per-file limit, so it is
+# gitignored; this pulls it back down into web/public/media, from where
+# ./scripts/encode-media.sh produces the derivatives the site actually serves.
+#
+# Safe to re-run — existing files are skipped.
 #
 #   ./scripts/fetch-media.sh
 #
 set -euo pipefail
 
 ORIGIN="https://bluewavevisuals.com"
-DEST="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/web/public/media"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+VIDEO_DEST="$ROOT/media-src"
+IMAGE_DEST="$ROOT/web/src/assets/media"
 
-mkdir -p "$DEST"
+mkdir -p "$VIDEO_DEST" "$IMAGE_DEST"
 
 ASSETS=(
   "/__l5e/assets-v1/048817ff-4742-4fed-b821-a7a95fcffc93/analog-upload-4.jpg"
@@ -73,14 +77,23 @@ for path in "${ASSETS[@]}"; do
     surfretreat-card-new-*.jpg) name="surfretreat-card-new.jpg" ;;
   esac
 
-  if [ -s "$DEST/$name" ]; then
+  # Video is served from public/; stills go through Astro's asset pipeline.
+  case "$name" in
+    *.mp4 | *.mov) dest="$VIDEO_DEST" ;;
+    *) dest="$IMAGE_DEST" ;;
+  esac
+
+  if [ -s "$dest/$name" ]; then
     echo "  skip  $name"
     continue
   fi
 
   echo "  get   $name"
-  curl -fsSL --retry 3 --max-time 600 "$ORIGIN$path" -o "$DEST/$name"
+  curl -fsSL --retry 3 --max-time 600 "$ORIGIN$path" -o "$dest/$name"
 done
 
 echo
-echo "Done — $(ls -1 "$DEST" | wc -l | tr -d ' ') files in web/public/media"
+echo "video originals: $(ls -1 "$VIDEO_DEST" 2>/dev/null | grep -cE '\.(mp4|mov)$' | tr -d ' ') in media-src/"
+echo "stills:          $(ls -1 "$IMAGE_DEST" 2>/dev/null | wc -l | tr -d ' ')"
+echo
+echo "Next: ./scripts/encode-media.sh"

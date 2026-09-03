@@ -45,6 +45,21 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
     />
 
     <meta name="generator" content={Astro.generator} />
+
+    <noscript>
+      <!-- Reveals are a progressive enhancement; without JS the content must
+           simply be visible rather than stuck at opacity 0. -->
+      <style>
+        [data-reveal] {
+          opacity: 1 !important;
+          transform: none !important;
+        }
+        .wave-path {
+          stroke-dashoffset: 0;
+          opacity: 1;
+        }
+      </style>
+    </noscript>
   </head>
 
   <body class={grain ? "paper-grain" : undefined}>

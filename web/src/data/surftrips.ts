@@ -50,7 +50,8 @@ export const safari = {
   eyebrow: "Section C · For advanced surfers",
   title: "SURFSAFARI",
   dates: "9–16 January 2027",
-  video: "/media/safari.mp4",
+  video: "/media/video/safari.mp4",
+  videoPoster: "/media/video/safari-poster.jpg",
   intro:
     "You're picked up at Agadir airport and spend your first night in Imi Ouddar, before the adventure really kicks off the next morning. Snoopy and his crew take us on a surf safari in their 4x4s to the best hidden surf spots along the Moroccan coast. You stay in a series of beautiful boutique villas spread across different locations to minimise drive time and maximise time in the water. All meals are provided so you've always got the energy for an unreal surf session. 🌊🏄‍♂️",
   expect: [
@@ -83,7 +84,8 @@ export const retreat = {
   eyebrow: "Section D · For beginners & intermediates",
   title: "SURFRETREAT",
   dates: "16–23 January 2027",
-  video: "/media/surfretreat-explain.mov",
+  video: "/media/video/surfretreat-explain.mp4",
+  videoPoster: "/media/video/surfretreat-explain-poster.jpg",
   intro:
     "You're picked up at Agadir airport and stay at the Snoopy villa in Imi Ouddar. All boards and wetsuits are available on site. No extra costs beyond your transport to Agadir airport. Private chefs make sure there's always something delicious on the table. Need some time alone? We share our location and you can rejoin the group at your own pace. This trip is built to connect like-minded surfers for life!",
   pricing: [

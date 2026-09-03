@@ -1,9 +1,11 @@
 ---
+import { Picture } from "astro:assets";
 import BookingCard from "~/components/BookingCard.astro";
 import Icon from "~/components/Icon.astro";
 import Nav from "~/components/Nav.astro";
 import Base from "~/layouts/Base.astro";
 import { site } from "~/data/site";
+import { getImage } from "~/lib/images";
 import { retreat, safari, surftrips, tripCards } from "~/data/surftrips";
 ---
 
@@ -19,11 +21,16 @@ import { retreat, safari, surftrips, tripCards } from "~/data/surftrips";
       class="relative isolate flex min-h-[80vh] flex-col items-center justify-center overflow-hidden px-6 pb-20 pt-32 text-center"
     >
       <div class="absolute inset-0 -z-10">
-        <img
-          src={surftrips.heroImage}
+        <Picture
+          src={getImage(surftrips.heroImage)}
           alt="Surfers watching the swell in Morocco"
-          class="h-full w-full object-cover"
+          widths={[720, 1280, 1920]}
+          sizes="100vw"
+          formats={["avif", "webp"]}
+                      fallbackFormat="jpg"
+          loading="eager"
           fetchpriority="high"
+          class="h-full w-full object-cover"
         />
       </div>
 
@@ -65,11 +72,14 @@ import { retreat, safari, surftrips, tripCards } from "~/data/surftrips";
                 style={`--reveal-delay: ${i * 0.12}s`}
               >
                 <div class="overflow-hidden rounded-2xl">
-                  <img
-                    src={card.image}
+                  <Picture
+                    src={getImage(card.image)}
                     alt={card.subtitle}
+                    widths={[480, 720, 1000]}
+                    sizes="(min-width: 768px) 50vw, 100vw"
+                    formats={["avif", "webp"]}
+                      fallbackFormat="jpg"
                     loading="lazy"
-                    decoding="async"
                     class="aspect-[4/3] w-full rounded-2xl object-cover transition-transform duration-700 group-hover:scale-[1.08]"
                   />
                 </div>
@@ -136,12 +146,12 @@ import { retreat, safari, surftrips, tripCards } from "~/data/surftrips";
           </p>
           <video
             src={safari.video}
-            autoplay
+            poster={safari.videoPoster}
             muted
             loop
             playsinline
             controls
-            preload="metadata"
+            preload="none"
             class="aspect-[4/5] w-full rounded-2xl object-cover shadow-lg"
             data-reveal="right"></video>
         </div>
@@ -173,11 +183,14 @@ import { retreat, safari, surftrips, tripCards } from "~/data/surftrips";
                 data-reveal="up"
                 style={`--reveal-delay: ${i * 0.12}s`}
               >
-                <img
-                  src={shot.src}
+                <Picture
+                  src={getImage(shot.src)}
                   alt={shot.alt}
+                  widths={[360, 540, 720]}
+                  sizes="(min-width: 768px) 33vw, 100vw"
+                  formats={["avif", "webp"]}
+                      fallbackFormat="jpg"
                   loading="lazy"
-                  decoding="async"
                   class="aspect-square w-full object-cover transition-transform duration-700 group-hover:scale-[1.1]"
                 />
               </div>
@@ -220,12 +233,12 @@ import { retreat, safari, surftrips, tripCards } from "~/data/surftrips";
         <div class="mt-10 grid gap-10 md:grid-cols-[1fr_1.2fr]">
           <video
             src={retreat.video}
-            autoplay
+            poster={retreat.videoPoster}
             muted
             loop
             playsinline
             controls
-            preload="metadata"
+            preload="none"
             class="aspect-[4/5] w-full rounded-2xl object-cover shadow-lg"
             data-reveal="left"></video>
           <p
@@ -290,11 +303,14 @@ import { retreat, safari, surftrips, tripCards } from "~/data/surftrips";
                 data-reveal="up"
                 style={`--reveal-delay: ${i * 0.12}s`}
               >
-                <img
-                  src={shot.src}
+                <Picture
+                  src={getImage(shot.src)}
                   alt={shot.alt}
+                  widths={[360, 540, 720]}
+                  sizes="(min-width: 768px) 33vw, 100vw"
+                  formats={["avif", "webp"]}
+                      fallbackFormat="jpg"
                   loading="lazy"
-                  decoding="async"
                   class="aspect-square w-full object-cover transition-transform duration-700 group-hover:scale-[1.1]"
                 />
               </div>

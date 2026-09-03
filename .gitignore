@@ -8,7 +8,8 @@ dist/
 .vscode/
 npm-debug.log*
 
-# Site video — ~400MB, and two files exceed GitHub's 100MB per-file limit.
-# Restore with ./scripts/fetch-media.sh
-web/public/media/*.mp4
-web/public/media/*.mov
+# Video. The camera originals are the big ones and never ship; the encoded
+# derivatives in media/video are what the site serves and are rebuilt by
+# ./scripts/encode-media.sh. Restore originals with ./scripts/fetch-media.sh
+media-src/
+web/public/media/video/

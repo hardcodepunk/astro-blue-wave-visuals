@@ -17,7 +17,8 @@ export const site = {
 } as const;
 
 export const media = {
-  heroVideo: "/media/banner-video-h264.mp4",
+  heroVideo: "/media/video/banner-video-h264.mp4",
+  heroPoster: "/media/video/banner-video-h264-poster.jpg",
   ewoud: "/media/ewoud-camera.jpg",
 } as const;
 
@@ -89,21 +90,17 @@ export const clients: string[] = [
 /* Home — selected work                                                */
 /* ------------------------------------------------------------------ */
 
-export type Project = {
-  id: string;
-  title: string;
-  category: string;
-  type: "video" | "gallery";
-  /** Poster frame for videos, cover image for galleries. */
-  src: string;
-  videoSrc?: string;
-  /** Gallery tiles that open in the in-page slider. */
-  images?: string[];
-  /** Gallery tiles that navigate to a dedicated page instead. */
-  href?: string;
-  aspect: string;
-  description: string;
-};
+/**
+ * Work-grid entries, as a discriminated union rather than a bag of optionals.
+ * Each variant carries exactly the fields it can use, so a video can never be
+ * handed a poster that is itself a video file — a bug the previous loose shape
+ * allowed and shipped.
+ */
+export type Project = { id: string; title: string; category: string; aspect: string; description: string } & (
+  | { kind: "video"; poster: string; videoSrc: string }
+  | { kind: "gallery-link"; cover: string; href: string }
+  | { kind: "gallery"; cover: string; images: string[] }
+);
 
 const portraits = [
   "/media/portraits-1.jpg",
@@ -158,88 +155,88 @@ export const analogWall = seededShuffle([...analogueGallery, ...analogExtras]);
 
 export const projects: Project[] = [
   {
+    kind: "video",
     id: "v1",
     title: "Nausicaá",
     category: "Film · Architecture",
-    type: "video",
-    src: "/media/thumbnail-nausicaa.jpg",
-    videoSrc: "/media/nausicaa.mov",
+    poster: "/media/video/nausicaa-poster.jpg",
+    videoSrc: "/media/video/nausicaa.mp4",
     aspect: "aspect-video",
     description:
       "A film for Nausicaá, the National Sea Center — architecture meeting the deep blue. Quiet, vast, and reverent.",
   },
   {
+    kind: "gallery-link",
     id: "c1",
     title: "Portraits",
     category: "Photography · People",
-    type: "gallery",
-    src: portraits[0]!,
+    cover: portraits[0]!,
     href: "/portrets",
     aspect: "aspect-[2/3]",
     description:
       "Quiet, honest portraits made in the water, on the road, and in the in-between moments.",
   },
   {
+    kind: "video",
     id: "v2",
     title: "Transfo Zwevegem",
     category: "Film · Industrial Heritage",
-    type: "video",
-    src: "/media/transfo.mp4",
-    videoSrc: "/media/transfo.mp4",
+    poster: "/media/video/transfo-poster.jpg",
+    videoSrc: "/media/video/transfo.mp4",
     aspect: "aspect-video",
     description:
       "A portrait of Transfo — concrete, light, and the long memory of industry reclaimed as culture.",
   },
   {
+    kind: "gallery-link",
     id: "c3",
     title: "Analogue",
     category: "Photography · 35mm",
-    type: "gallery",
-    src: analogueGallery[0]!,
+    cover: analogueGallery[0]!,
     href: "/analog",
     aspect: "aspect-[2/3]",
     description:
       "Sun-bleached frames shot on film. Grain, warmth, and the patience that analog demands.",
   },
   {
+    kind: "video",
     id: "v3",
     title: "Surfers Hell",
     category: "Film · Documentary",
-    type: "video",
-    src: "/media/thumbnail-surfers-hell.jpg",
-    videoSrc: "/media/surfers-hell.mov",
+    poster: "/media/video/surfers-hell-poster.jpg",
+    videoSrc: "/media/video/surfers-hell.mp4",
     aspect: "aspect-video",
     description:
       "Documentary work following surfers through cold water, bad weather, and the kind of joy that lives between sets.",
   },
   {
+    kind: "gallery",
     id: "c4",
     title: "Winter Sports",
     category: "Photography · Snow",
-    type: "gallery",
-    src: "/media/winter-1.jpg",
+    cover: "/media/winter-1.jpg",
     images: ["/media/winter-1.jpg", "/media/winter-2.jpg", "/media/winter-3.jpg"],
     aspect: "aspect-[2/3]",
     description:
       "Movement in the snow — the same eye that follows a wave, turned uphill.",
   },
   {
+    kind: "video",
     id: "v4",
     title: "Food & Beverage",
     category: "Film · Brand",
-    type: "video",
-    src: "/media/food-beverage-replacement.mp4",
-    videoSrc: "/media/food-beverage-replacement.mp4",
+    poster: "/media/video/food-beverage-replacement-poster.jpg",
+    videoSrc: "/media/video/food-beverage-replacement.mp4",
     aspect: "aspect-video",
     description:
       "From the boat to the plate. A reel celebrating the chefs, the catch, and the rituals around a coastal table.",
   },
   {
+    kind: "gallery",
     id: "c2",
     title: "Food & Beverage",
     category: "Photography · Editorial",
-    type: "gallery",
-    src: "/media/food2.jpg",
+    cover: "/media/food2.jpg",
     images: [
       "/media/food1.jpg",
       "/media/food2.jpg",
@@ -252,12 +249,12 @@ export const projects: Project[] = [
       "From sea to plate — artistic stills made for chefs, restaurants and ocean-rooted producers.",
   },
   {
+    kind: "video",
     id: "v5",
     title: "Le Pin Sec",
     category: "Film · Coastal",
-    type: "video",
-    src: "/media/le-pin-sec-support.mp4",
-    videoSrc: "/media/le-pin-sec-support.mp4",
+    poster: "/media/video/le-pin-sec-support-poster.jpg",
+    videoSrc: "/media/video/le-pin-sec-support.mp4",
     aspect: "aspect-video",
     description:
       "An ongoing coastal project shot at Le Pin Sec — wide skies, empty beach breaks, slow afternoons.",

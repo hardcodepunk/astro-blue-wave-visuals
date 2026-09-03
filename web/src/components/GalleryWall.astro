@@ -1,5 +1,6 @@
 ---
-import GalleryLightbox from "./GalleryLightbox";
+import { Picture } from "astro:assets";
+import { getImage } from "~/lib/images";
 
 interface Props {
   images: string[];
@@ -7,6 +8,7 @@ interface Props {
 }
 
 const { images, label } = Astro.props;
+const resolved = images.map(getImage);
 ---
 
 <section class="px-3 pb-20 md:px-6">
@@ -15,19 +17,23 @@ const { images, label } = Astro.props;
     data-gallery
   >
     {
-      images.map((src, i) => (
+      resolved.map((image, i) => (
         <button
           type="button"
           class="group mb-3 block w-full break-inside-avoid overflow-hidden md:mb-4"
           data-index={i}
+          aria-label={`Open ${label} ${i + 1} of ${resolved.length}`}
           data-reveal="up"
           style={`--reveal-delay: ${(i % 4) * 0.05}s`}
         >
-          <img
-            src={src}
+          <Picture
+            src={image}
             alt={`${label} ${i + 1}`}
-            loading="lazy"
-            decoding="async"
+            widths={[320, 480, 720, 1000]}
+            sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
+            formats={["avif", "webp"]}
+                      fallbackFormat="jpg"
+            loading={i < 4 ? "eager" : "lazy"}
             class="h-auto w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
           />
         </button>
@@ -36,21 +42,97 @@ const { images, label } = Astro.props;
   </div>
 </section>
 
-<GalleryLightbox images={images} label={label} client:idle />
+<dialog
+  class="m-0 h-full max-h-none w-full max-w-none bg-transparent p-4 backdrop:bg-black/85 backdrop:backdrop-blur-md md:p-10"
+  aria-label={`${label} viewer`}
+  data-lightbox
+>
+  <div class="relative flex h-full items-center justify-center">
+    <button
+      type="button"
+      aria-label="Close"
+      class="absolute right-0 top-0 z-20 rounded-full bg-background/80 p-2 text-primary shadow hover:bg-background"
+      data-close
+    >
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="size-5" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+    </button>
 
-<script>
-  import { OPEN_IMAGE_EVENT } from "./GalleryLightbox";
+    <button
+      type="button"
+      aria-label="Previous"
+      class="absolute left-0 top-1/2 z-20 -translate-y-1/2 rounded-full bg-background/80 p-2 text-primary shadow hover:bg-background md:left-2"
+      data-prev
+    >
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="size-5" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg>
+    </button>
 
-  document
-    .querySelector("[data-gallery]")
-    ?.addEventListener("click", (event) => {
-      const tile = (event.target as HTMLElement).closest<HTMLElement>(
-        "[data-index]",
-      );
+    <button
+      type="button"
+      aria-label="Next"
+      class="absolute right-0 top-1/2 z-20 -translate-y-1/2 rounded-full bg-background/80 p-2 text-primary shadow hover:bg-background md:right-2"
+      data-next
+    >
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="size-5" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
+    </button>
+
+    <img
+      alt=""
+      class="max-h-[88vh] max-w-[92vw] object-contain shadow-2xl"
+      data-frame
+    />
+
+    <p
+      class="absolute bottom-0 left-1/2 -translate-x-1/2 rounded-full bg-background/80 px-3 py-1 text-[10px] uppercase tracking-[0.25em] text-primary"
+      aria-live="polite"
+      data-counter
+    >
+    </p>
+  </div>
+</dialog>
+
+<script is:inline define:vars={{ sources: resolved.map((i) => i.src), label }}>
+  (() => {
+    const dialog = document.querySelector("[data-lightbox]");
+    const wall = document.querySelector("[data-gallery]");
+    if (!(dialog instanceof HTMLDialogElement) || !wall) return;
+
+    const frame = dialog.querySelector("[data-frame]");
+    const counter = dialog.querySelector("[data-counter]");
+    let index = 0;
+
+    const render = () => {
+      frame.src = sources[index];
+      frame.alt = `${label} ${index + 1}`;
+      counter.textContent = `${index + 1} / ${sources.length}`;
+    };
+
+    const go = (step) => {
+      index = (index + step + sources.length) % sources.length;
+      render();
+    };
+
+    wall.addEventListener("click", (event) => {
+      const tile = event.target.closest("[data-index]");
       if (!tile) return;
-
-      window.dispatchEvent(
-        new CustomEvent(OPEN_IMAGE_EVENT, { detail: Number(tile.dataset.index) }),
-      );
+      index = Number(tile.dataset.index);
+      render();
+      // showModal() gives us the focus trap, Escape handling and an inert
+      // background for free — the reason this is a <dialog> and not a div.
+      dialog.showModal();
     });
+
+    dialog.querySelector("[data-close]").addEventListener("click", () => dialog.close());
+    dialog.querySelector("[data-prev]").addEventListener("click", () => go(-1));
+    dialog.querySelector("[data-next]").addEventListener("click", () => go(1));
+
+    dialog.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowRight") go(1);
+      if (event.key === "ArrowLeft") go(-1);
+    });
+
+    // Clicking the backdrop (outside the image) dismisses.
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+  })();
 </script>

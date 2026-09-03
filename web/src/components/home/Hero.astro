@@ -8,25 +8,28 @@ import { media } from "~/data/site";
   class="relative isolate flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 text-center"
 >
   <div class="absolute inset-0 z-0">
+    <!-- The poster carries the first paint; the video itself is fetched by the
+         script below, and only when motion is welcome. -->
     <video
-      src={media.heroVideo}
+      poster={media.heroPoster}
       autoplay
       muted
       loop
       playsinline
-      preload="auto"
+      preload="none"
       class="size-full object-cover"
-    ></video>
+      data-hero-video
+      data-src={media.heroVideo}></video>
   </div>
 
   <div
     class="relative z-10 max-w-4xl text-[#fce8c8] [text-shadow:_0_2px_18px_rgb(0_0_0_/_45%)]"
     data-reveal="up"
   >
-    <p class="mx-auto max-w-2xl text-balance text-lg italic md:text-2xl">
+    <h1 class="mx-auto max-w-2xl text-balance text-lg italic md:text-2xl">
       &ldquo;Life feels different when the ocean becomes your reference
       point.&rdquo;
-    </p>
+    </h1>
 
     <div class="mt-12 flex justify-center">
       <a
@@ -39,3 +42,15 @@ import { media } from "~/data/site";
     </div>
   </div>
 </section>
+
+<script>
+  const hero = document.querySelector<HTMLVideoElement>("[data-hero-video]");
+  const stillness = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  // Anyone who has asked for less motion keeps the poster frame and never
+  // pays for the video download.
+  if (hero && !stillness.matches) {
+    hero.src = hero.dataset.src ?? "";
+    void hero.play().catch(() => {});
+  }
+</script>
