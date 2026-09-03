@@ -1,0 +1,40 @@
+---
+import GalleryWall from "~/components/GalleryWall.astro";
+import Nav from "~/components/Nav.astro";
+import Base from "~/layouts/Base.astro";
+import { galleries, site, type Gallery } from "~/data/site";
+
+export function getStaticPaths() {
+  return galleries.map((gallery) => ({
+    params: { gallery: gallery.slug },
+    props: { gallery },
+  }));
+}
+
+interface Props {
+  gallery: Gallery;
+}
+
+const { gallery } = Astro.props;
+---
+
+<Base
+  title={`${gallery.title} — ${site.name}`}
+  description={gallery.description}
+  grain={false}
+>
+  <main class="relative min-h-screen bg-background text-foreground">
+    <Nav variant="gallery" />
+
+    <header class="px-6 pb-8 pt-10 md:px-10 md:pb-12 md:pt-16">
+      <p class="mb-3 text-xs uppercase tracking-[0.3em] text-primary/70">
+        — Gallery
+      </p>
+      <h1 class="font-serif text-4xl text-primary md:text-6xl">
+        {gallery.title}
+      </h1>
+    </header>
+
+    <GalleryWall images={gallery.images} label={gallery.label} />
+  </main>
+</Base>

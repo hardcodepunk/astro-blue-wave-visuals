@@ -153,6 +153,37 @@ function seededShuffle<T>(input: readonly T[], seed = 42): T[] {
 
 export const analogWall = seededShuffle([...analogueGallery, ...analogExtras]);
 
+/**
+ * The dedicated photo walls, rendered by `src/pages/[gallery].astro`.
+ * `label` is singular because it becomes each frame's alt text.
+ */
+export type Gallery = {
+  slug: string;
+  title: string;
+  label: string;
+  description: string;
+  images: string[];
+};
+
+export const galleries: Gallery[] = [
+  {
+    slug: "analog",
+    title: "Analog",
+    label: "Analog",
+    description:
+      "Sun-bleached 35mm frames shot on film. Grain, warmth, and the patience that analog demands.",
+    images: analogWall,
+  },
+  {
+    slug: "portrets",
+    title: "Portraits",
+    label: "Portrait",
+    description:
+      "Quiet, honest portraits made in the water, on the road, and in the in-between moments.",
+    images: portraitsGallery,
+  },
+];
+
 export const projects: Project[] = [
   {
     kind: "video",
