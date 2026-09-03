@@ -97,7 +97,14 @@ export const clients: string[] = [
  * allowed and shipped.
  */
 export type Project = { id: string; title: string; category: string; aspect: string; description: string } & (
-  | { kind: "video"; poster: string; videoSrc: string }
+  | {
+      kind: "video";
+      poster: string;
+      /** Full-quality file, played in the dialog. */
+      videoSrc: string;
+      /** Short silent loop the grid tile plays on hover. */
+      previewSrc: string;
+    }
   | { kind: "gallery-link"; cover: string; href: string }
   | { kind: "gallery"; cover: string; images: string[] }
 );
@@ -192,6 +199,7 @@ export const projects: Project[] = [
     category: "Film · Architecture",
     poster: "/media/video/nausicaa-poster.jpg",
     videoSrc: "/media/video/nausicaa.mp4",
+    previewSrc: "/media/video/nausicaa-preview.mp4",
     aspect: "aspect-video",
     description:
       "A film for Nausicaá, the National Sea Center — architecture meeting the deep blue. Quiet, vast, and reverent.",
@@ -214,6 +222,7 @@ export const projects: Project[] = [
     category: "Film · Industrial Heritage",
     poster: "/media/video/transfo-poster.jpg",
     videoSrc: "/media/video/transfo.mp4",
+    previewSrc: "/media/video/transfo-preview.mp4",
     aspect: "aspect-video",
     description:
       "A portrait of Transfo — concrete, light, and the long memory of industry reclaimed as culture.",
@@ -236,6 +245,7 @@ export const projects: Project[] = [
     category: "Film · Documentary",
     poster: "/media/video/surfers-hell-poster.jpg",
     videoSrc: "/media/video/surfers-hell.mp4",
+    previewSrc: "/media/video/surfers-hell-preview.mp4",
     aspect: "aspect-video",
     description:
       "Documentary work following surfers through cold water, bad weather, and the kind of joy that lives between sets.",
@@ -258,6 +268,7 @@ export const projects: Project[] = [
     category: "Film · Brand",
     poster: "/media/video/food-beverage-replacement-poster.jpg",
     videoSrc: "/media/video/food-beverage-replacement.mp4",
+    previewSrc: "/media/video/food-beverage-replacement-preview.mp4",
     aspect: "aspect-video",
     description:
       "From the boat to the plate. A reel celebrating the chefs, the catch, and the rituals around a coastal table.",
@@ -286,6 +297,7 @@ export const projects: Project[] = [
     category: "Film · Coastal",
     poster: "/media/video/le-pin-sec-support-poster.jpg",
     videoSrc: "/media/video/le-pin-sec-support.mp4",
+    previewSrc: "/media/video/le-pin-sec-support-preview.mp4",
     aspect: "aspect-video",
     description:
       "An ongoing coastal project shot at Le Pin Sec — wide skies, empty beach breaks, slow afternoons.",

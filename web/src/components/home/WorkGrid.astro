@@ -36,7 +36,7 @@ const openable = projects.filter((p) => p.kind !== "gallery-link");
               <div class:list={["relative w-full overflow-hidden", project.aspect]}>
                 {project.kind === "video" ? (
                   <video
-                    src={project.videoSrc}
+                    src={project.previewSrc}
                     poster={project.poster}
                     muted
                     loop
