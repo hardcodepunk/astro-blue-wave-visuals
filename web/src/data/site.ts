@@ -96,7 +96,13 @@ export const clients: string[] = [
  * handed a poster that is itself a video file — a bug the previous loose shape
  * allowed and shipped.
  */
-export type Project = { id: string; title: string; category: string; aspect: string; description: string } & (
+export type Project = {
+  id: string;
+  title: string;
+  category: string;
+  aspect: string;
+  description: string;
+} & (
   | {
       kind: "video";
       poster: string;
@@ -256,7 +262,11 @@ export const projects: Project[] = [
     title: "Winter Sports",
     category: "Photography · Snow",
     cover: "/media/winter-1.jpg",
-    images: ["/media/winter-1.jpg", "/media/winter-2.jpg", "/media/winter-3.jpg"],
+    images: [
+      "/media/winter-1.jpg",
+      "/media/winter-2.jpg",
+      "/media/winter-3.jpg",
+    ],
     aspect: "aspect-[2/3]",
     description:
       "Movement in the snow — the same eye that follows a wave, turned uphill.",

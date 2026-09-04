@@ -1,0 +1,70 @@
+---
+import { Picture } from "astro:assets";
+import { getImage } from "~/lib/images";
+
+/**
+ * The single place images are configured.
+ *
+ * Every call site used to repeat `formats`, `fallbackFormat` and the
+ * `getImage` lookup by hand — which is exactly where `formats` once ended up
+ * on `<Image>`, a prop it silently ignores, costing us AVIF everywhere without
+ * failing the build. Centralising it makes that mistake unrepresentable.
+ *
+ * `layout` names the grid the image sits in, so the `sizes` contract lives
+ * here rather than being restated as a media-query string at each use.
+ */
+type Layout = "masonry" | "half" | "third" | "full" | "dialog";
+
+interface Props {
+  /** A `/media/...` path, as stored in `src/data`. */
+  src: string;
+  alt: string;
+  layout?: Layout;
+  widths?: number[];
+  loading?: "lazy" | "eager";
+  fetchpriority?: "high" | "low" | "auto";
+  class?: string;
+  [key: `data-${string}`]: unknown;
+}
+
+const SIZES: Record<Layout, string> = {
+  masonry:
+    "(min-width: 1024px) 25vw, (min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw",
+  half: "(min-width: 768px) 50vw, 100vw",
+  third: "(min-width: 768px) 33vw, 100vw",
+  full: "100vw",
+  dialog: "(min-width: 768px) 60vw, 100vw",
+};
+
+const WIDTHS: Record<Layout, number[]> = {
+  masonry: [320, 480, 720, 1000],
+  half: [480, 720, 1000],
+  third: [360, 540, 720],
+  full: [720, 1280, 1920],
+  dialog: [720, 1200],
+};
+
+const {
+  src,
+  alt,
+  layout = "masonry",
+  widths = WIDTHS[layout],
+  loading = "lazy",
+  fetchpriority,
+  class: className,
+  ...rest
+} = Astro.props;
+---
+
+<Picture
+  src={getImage(src)}
+  alt={alt}
+  widths={widths}
+  sizes={SIZES[layout]}
+  formats={["avif", "webp"]}
+  fallbackFormat="jpg"
+  loading={loading}
+  fetchpriority={fetchpriority}
+  class={className}
+  {...rest}
+/>

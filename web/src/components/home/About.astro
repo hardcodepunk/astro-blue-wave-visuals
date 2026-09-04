@@ -1,7 +1,6 @@
 ---
-import { Picture } from "astro:assets";
+import Photo from "../Photo.astro";
 import { media } from "~/data/site";
-import { getImage } from "~/lib/images";
 ---
 
 <section id="about" class="relative px-6 py-28 md:py-40">
@@ -10,21 +9,17 @@ import { getImage } from "~/lib/images";
       <div
         class="relative overflow-hidden rounded-md border-4 border-background shadow-xl"
       >
-        <Picture
-          src={getImage(media.ewoud)}
+        <Photo
+          src={media.ewoud}
           alt="Ewoud with camera"
-          widths={[480, 720, 1000]}
-          sizes="(min-width: 768px) 50vw, 100vw"
-          formats={["avif", "webp"]}
-                      fallbackFormat="jpg"
-          loading="lazy"
+          layout="half"
           class="w-full"
         />
       </div>
     </div>
 
     <div>
-      <p class="mb-4 text-xs uppercase tracking-[0.3em] text-primary">
+      <p class="mb-4 text-xs tracking-[0.3em] text-primary uppercase">
         — About Us
       </p>
       <h2 class="text-4xl leading-[1.05] text-primary md:text-6xl">Ewoud</h2>

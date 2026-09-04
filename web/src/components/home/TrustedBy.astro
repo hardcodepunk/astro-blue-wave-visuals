@@ -6,7 +6,7 @@ const track = [...clients, ...clients];
 ---
 
 <section class="overflow-hidden border-y border-primary/20 bg-secondary py-14">
-  <p class="mb-8 text-center text-xs uppercase tracking-[0.3em] text-primary">
+  <p class="mb-8 text-center text-xs tracking-[0.3em] text-primary uppercase">
     — Trusted by
   </p>
 
@@ -16,7 +16,7 @@ const track = [...clients, ...clients];
     <div class="flex shrink-0 animate-marquee" aria-hidden="true">
       {
         track.map((client) => (
-          <span class="mx-8 whitespace-nowrap font-serif text-2xl text-primary md:text-4xl">
+          <span class="mx-8 font-serif text-2xl whitespace-nowrap text-primary md:text-4xl">
             {client}
           </span>
         ))

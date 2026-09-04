@@ -56,7 +56,7 @@ const logoSize =
       </a>
       <a
         href="/#work"
-        class="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-primary transition hover:opacity-60"
+        class="inline-flex items-center gap-2 text-xs tracking-[0.22em] text-primary uppercase transition hover:opacity-60"
       >
         <Icon name="arrow-left" class="size-3.5" /> Back to Projects
       </a>
@@ -70,7 +70,7 @@ const logoSize =
         <img src="/logo.svg" alt={site.name} class={`${logoSize} w-auto`} />
       </a>
 
-      <div class="hidden gap-8 text-sm uppercase tracking-[0.18em] text-primary md:flex">
+      <div class="hidden gap-8 text-sm tracking-[0.18em] text-primary uppercase md:flex">
         {links.map((link) => (
           <a
             href={link.href}
@@ -86,7 +86,7 @@ const logoSize =
 
       <a
         href={`mailto:${site.email}`}
-        class="hidden items-center gap-2 rounded-full bg-primary px-4 py-2 text-xs uppercase tracking-[0.18em] text-primary-foreground transition hover:bg-primary-deep md:inline-flex"
+        class="hidden items-center gap-2 rounded-full bg-primary px-4 py-2 text-xs tracking-[0.18em] text-primary-foreground uppercase transition hover:bg-primary-deep md:inline-flex"
       >
         <Icon name="mail" class="size-3.5" /> Get in touch
       </a>
@@ -105,14 +105,14 @@ const logoSize =
 
       <div
         id="mobile-menu"
-        class="absolute right-4 top-full z-50 mt-2 hidden w-44 rounded-md bg-[#F6F4EB] px-4 py-3 shadow-lg md:hidden"
+        class="absolute top-full right-4 z-50 mt-2 hidden w-44 rounded-md bg-[#F6F4EB] px-4 py-3 shadow-lg md:hidden"
         data-menu-panel
       >
         <div class="flex flex-col gap-1">
           {mobileLinks.map((link) => (
             <a
               href={link.href}
-              class="py-1 text-[11px] uppercase leading-tight tracking-[0.18em] text-[#1E73BE] transition hover:opacity-70"
+              class="py-1 text-[11px] leading-tight tracking-[0.18em] text-[#1E73BE] uppercase transition hover:opacity-70"
             >
               {link.label}
             </a>

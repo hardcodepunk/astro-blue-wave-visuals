@@ -89,7 +89,11 @@ export const retreat = {
   intro:
     "You're picked up at Agadir airport and stay at the Snoopy villa in Imi Ouddar. All boards and wetsuits are available on site. No extra costs beyond your transport to Agadir airport. Private chefs make sure there's always something delicious on the table. Need some time alone? We share our location and you can rejoin the group at your own pace. This trip is built to connect like-minded surfers for life!",
   pricing: [
-    { label: "Private Double Room", price: "€975", note: "per person (2 guests)" },
+    {
+      label: "Private Double Room",
+      price: "€975",
+      note: "per person (2 guests)",
+    },
     {
       label: "Private Double Room — Single Occupancy",
       price: "€1450",

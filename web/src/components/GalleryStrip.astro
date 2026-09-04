@@ -1,0 +1,30 @@
+---
+import Photo from "./Photo.astro";
+
+/** A three-up row of square shots, used once per trip on the surftrips page. */
+interface Props {
+  shots: readonly { src: string; alt: string }[];
+  class?: string;
+}
+
+const { shots, class: className = "mt-12" } = Astro.props;
+---
+
+<div class:list={["grid gap-6 md:grid-cols-3", className]}>
+  {
+    shots.map((shot, i) => (
+      <div
+        class="group overflow-hidden rounded-2xl shadow-lg"
+        data-reveal="up"
+        style={`--reveal-delay: ${i * 0.12}s`}
+      >
+        <Photo
+          src={shot.src}
+          alt={shot.alt}
+          layout="third"
+          class="aspect-square w-full object-cover transition-transform duration-700 group-hover:scale-[1.1]"
+        />
+      </div>
+    ))
+  }
+</div>

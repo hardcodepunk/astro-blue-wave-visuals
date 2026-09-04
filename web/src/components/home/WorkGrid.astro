@@ -1,7 +1,7 @@
 ---
-import { Picture } from "astro:assets";
+import Icon from "../Icon.astro";
+import Photo from "../Photo.astro";
 import { projects } from "~/data/site";
-import { getImage } from "~/lib/images";
 
 // Everything except the two galleries that navigate to their own page opens
 // in the dialog below.
@@ -12,7 +12,7 @@ const openable = projects.filter((p) => p.kind !== "gallery-link");
   <div class="mx-auto max-w-7xl">
     <div class="mb-12 flex flex-wrap items-end justify-between gap-6">
       <div>
-        <p class="mb-4 text-xs uppercase tracking-[0.3em] text-primary">
+        <p class="mb-4 text-xs tracking-[0.3em] text-primary uppercase">
           — Selected Work
         </p>
         <h2 class="text-4xl leading-[1.05] text-primary md:text-7xl">
@@ -33,7 +33,9 @@ const openable = projects.filter((p) => p.kind !== "gallery-link");
         projects.map((project, i) => {
           const inner = (
             <>
-              <div class:list={["relative w-full overflow-hidden", project.aspect]}>
+              <div
+                class:list={["relative w-full overflow-hidden", project.aspect]}
+              >
                 {project.kind === "video" ? (
                   <video
                     src={project.previewSrc}
@@ -45,21 +47,17 @@ const openable = projects.filter((p) => p.kind !== "gallery-link");
                     class="size-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                   />
                 ) : (
-                  <Picture
-                    src={getImage(project.cover)}
+                  <Photo
+                    src={project.cover}
                     alt={project.title}
                     widths={[320, 480, 720]}
-                    sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
-                    formats={["avif", "webp"]}
-                      fallbackFormat="jpg"
-                    loading="lazy"
                     class="size-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                   />
                 )}
               </div>
 
               <div class="mt-4">
-                <p class="text-[10px] uppercase tracking-[0.28em] text-primary/70">
+                <p class="text-[10px] tracking-[0.28em] text-primary/70 uppercase">
                   {project.category.split("·").pop()?.trim()}
                 </p>
                 <h3 class="mt-2 font-serif text-xl text-primary md:text-2xl">
@@ -108,15 +106,19 @@ const openable = projects.filter((p) => p.kind !== "gallery-link");
       <button
         type="button"
         aria-label="Close"
-        class="absolute right-4 top-4 z-20 rounded-full bg-background/80 p-2 text-primary shadow hover:bg-background"
+        class="absolute top-4 right-4 z-20 rounded-full bg-background/80 p-2 text-primary shadow hover:bg-background"
         data-close
       >
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="size-5" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+        <Icon name="x" class="size-5" />
       </button>
 
       {
         openable.map((project) => (
-          <div class="grid md:grid-cols-[1.6fr_1fr]" data-panel={project.id} hidden>
+          <div
+            class="grid md:grid-cols-[1.6fr_1fr]"
+            data-panel={project.id}
+            hidden
+          >
             <div class="relative bg-primary-deep">
               {project.kind === "video" ? (
                 <video
@@ -131,15 +133,11 @@ const openable = projects.filter((p) => p.kind !== "gallery-link");
                 <>
                   {project.images.map((src, s) => (
                     <div data-slide={s} hidden={s > 0}>
-                      <Picture
-                      src={getImage(src)}
-                      alt={`${project.title} ${s + 1}`}
-                      widths={[720, 1200]}
-                      sizes="(min-width: 768px) 60vw, 100vw"
-                      formats={["avif", "webp"]}
-                      fallbackFormat="jpg"
-                      loading="lazy"
-                      class="h-[40vh] w-full bg-primary-deep object-contain md:h-[70vh]"
+                      <Photo
+                        src={src}
+                        alt={`${project.title} ${s + 1}`}
+                        layout="dialog"
+                        class="h-[40vh] w-full bg-primary-deep object-contain md:h-[70vh]"
                       />
                     </div>
                   ))}
@@ -147,21 +145,21 @@ const openable = projects.filter((p) => p.kind !== "gallery-link");
                   <button
                     type="button"
                     aria-label="Previous"
-                    class="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-background/80 p-2 text-primary shadow hover:bg-background"
+                    class="absolute top-1/2 left-3 -translate-y-1/2 rounded-full bg-background/80 p-2 text-primary shadow hover:bg-background"
                     data-prev
                   >
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="size-5" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg>
+                    <Icon name="chevron-left" class="size-5" />
                   </button>
                   <button
                     type="button"
                     aria-label="Next"
-                    class="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-background/80 p-2 text-primary shadow hover:bg-background"
+                    class="absolute top-1/2 right-3 -translate-y-1/2 rounded-full bg-background/80 p-2 text-primary shadow hover:bg-background"
                     data-next
                   >
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="size-5" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
+                    <Icon name="chevron-right" class="size-5" />
                   </button>
                   <p
-                    class="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-background/80 px-3 py-1 text-[10px] uppercase tracking-[0.25em] text-primary"
+                    class="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-background/80 px-3 py-1 text-[10px] tracking-[0.25em] text-primary uppercase"
                     aria-live="polite"
                     data-counter
                   >
@@ -172,7 +170,7 @@ const openable = projects.filter((p) => p.kind !== "gallery-link");
             </div>
 
             <div class="flex flex-col gap-4 p-6 md:p-8">
-              <span class="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+              <span class="text-xs tracking-[0.2em] text-muted-foreground uppercase">
                 {project.category}
               </span>
               <h3 class="text-3xl text-primary md:text-4xl">{project.title}</h3>
@@ -188,13 +186,16 @@ const openable = projects.filter((p) => p.kind !== "gallery-link");
 </dialog>
 
 <script>
-  const dialog = document.querySelector<HTMLDialogElement>("[data-project-dialog]");
+  const dialog = document.querySelector<HTMLDialogElement>(
+    "[data-project-dialog]",
+  );
   const grid = document.querySelector("[data-work]");
   if (dialog && grid) {
     const panels = [...dialog.querySelectorAll<HTMLElement>("[data-panel]")];
 
-    const slidesIn = (panel: HTMLElement) =>
-      [...panel.querySelectorAll<HTMLElement>("[data-slide]")];
+    const slidesIn = (panel: HTMLElement) => [
+      ...panel.querySelectorAll<HTMLElement>("[data-slide]"),
+    ];
 
     const showSlide = (panel: HTMLElement, next: number) => {
       const slides = slidesIn(panel);
@@ -212,7 +213,9 @@ const openable = projects.filter((p) => p.kind !== "gallery-link");
       dialog.querySelectorAll("video").forEach((video) => video.pause());
 
     grid.addEventListener("click", (event) => {
-      const trigger = (event.target as HTMLElement).closest<HTMLElement>("[data-open]");
+      const trigger = (event.target as HTMLElement).closest<HTMLElement>(
+        "[data-open]",
+      );
       if (!trigger) return;
 
       const id = trigger.dataset.open;
@@ -238,8 +241,10 @@ const openable = projects.filter((p) => p.kind !== "gallery-link");
       const panel = target.closest<HTMLElement>("[data-panel]");
       if (!panel) return;
 
-      if (target.closest("[data-next]")) showSlide(panel, activeIndex(panel) + 1);
-      if (target.closest("[data-prev]")) showSlide(panel, activeIndex(panel) - 1);
+      if (target.closest("[data-next]"))
+        showSlide(panel, activeIndex(panel) + 1);
+      if (target.closest("[data-prev]"))
+        showSlide(panel, activeIndex(panel) - 1);
     });
 
     dialog.addEventListener("keydown", (event) => {
@@ -256,7 +261,10 @@ const openable = projects.filter((p) => p.kind !== "gallery-link");
     // until the pointer actually lands on one.
     grid.querySelectorAll("video").forEach((video) => {
       const tile = video.closest("a, button");
-      tile?.addEventListener("mouseenter", () => void video.play().catch(() => {}));
+      tile?.addEventListener(
+        "mouseenter",
+        () => void video.play().catch(() => {}),
+      );
       tile?.addEventListener("mouseleave", () => {
         video.pause();
         video.currentTime = 0;
